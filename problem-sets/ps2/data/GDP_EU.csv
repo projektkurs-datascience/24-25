@@ -1,0 +1,57 @@
+country,value,variable
+Belgium,11760000,population
+Bulgaria,6440000,population
+Czech Republic,10710000,population
+Denmark,5950000,population
+Germany,84540000,population
+Estonia,1380000,population
+Ireland,5350000,population
+Greece,10460000,population
+Spain,48170000,population
+France,68260000,population
+Croatia,3900000,population
+Italy,58990000,population
+Cyprus,930000,population
+Latvia,1870000,population
+Lithuania,2870000,population
+Luxembourg,670000,population
+Hungary,9590000,population
+Malta,550000,population
+Netherlands,17880000,population
+Austria,9120000,population
+Poland,37290000,population
+Portugal,10350000,population
+Romania,19050000,population
+Slovenia,2120000,population
+Slovakia,5540000,population
+Finland,5590000,population
+Sweden,10540000,population
+United Kingdom,67850000,population
+Belgium,584698900000,gdp
+Bulgaria,93946500000,gdp
+Czech Republic,305962900000,gdp
+Denmark,373753000000,gdp
+Germany,4121160000000,gdp
+Estonia,37682450000,gdp
+Ireland,504619700000,gdp
+Greece,220302600000,gdp
+Spain,1461889000000,gdp
+France,2803100000000,gdp
+Croatia,76468140000,gdp
+Italy,2085376000000,gdp
+Cyprus,29807200000,gdp
+Latvia,40348050000,gdp
+Lithuania,71986180000,gdp
+Luxembourg,79309620000,gdp
+Hungary,196390000000,gdp
+Malta,19381870000,gdp
+Netherlands,1034086000000,gdp
+Austria,477248800000,gdp
+Poland,750806400000,gdp
+Portugal,265503000000,gdp
+Romania,324577100000,gdp
+Slovenia,63089580000,gdp
+Slovakia,122812800000,gdp
+Finland,277625000000,gdp
+Sweden,548375200000,gdp
+United Kingdom,3089478000000,gdp

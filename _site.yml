@@ -1,0 +1,63 @@
+name: Projektkurs Data Science & Business Analytics
+output_dir: '.'
+navbar:
+  title: Data Science & Business Analytics
+  left:
+  - text: Folien
+    icon: fa-home
+    href: slides.html
+  - text: Case-Study
+    menu:
+      - text: "Was erwartet Sie in der Case-Study?"
+        href: case-study-index.html
+      - text: "Erster Teil der Case-Study"
+        href: ./case-study/case_study_germany_1.html
+      - text: "Zweiter Teil der Case-Study"
+        href: ./case-study/case_study_germany_2.html
+  - text: RTutor-Problem-Sets
+    menu:
+      - text: "Problem Set 1"
+        href: https://github.com/projektkurs-datascience/23-24/tree/main/problem-sets/ps1
+      - text: "Problem Set 2"
+        href: https://github.com/projektkurs-datascience/23-24/tree/main/problem-sets/ps2
+      - text: "Problem Set 3"
+        href: https://github.com/projektkurs-datascience/23-24/tree/main/problem-sets/ps3
+  - text: Tutorials
+    icon: fa-users
+    menu:
+      - text: "Installation von R"
+        href: ./tutorials/Download-und-Installation.html
+      - text: "Benötigte Pakete"
+        href: ./tutorials/Pakete-Installieren.html
+      - text: "Hilfreiche Fragen im Forum stellen"
+        href: ./tutorials/Fragen-im-Forum.html
+      - text: "Tutorial zu Git und Github"
+        href: ./tutorials/Git-und-Github.html
+      - text: "Leitlinien zur Projektausarbeitung"
+        href: ./tutorials/Leitlinien_zur_Projektabgabe.html
+      - text: "Review Reports erstellen"
+        href: ./tutorials/Review_Reports.html
+      - text: "Feedback zu den Review Reports"
+        href: ./tutorials/Gruppenfeedback.html
+      - text: "Teambuilding Guidlines"
+        href: ./tutorials/Team-Guidelines.html
+      - text: "Quellen und KI Guidelines"
+        href: ./tutorials/Quellenverweise-und-AI-Policy.html
+      - text: "Cheatsheets"
+        href: https://rstudio.com/resources/cheatsheets/
+  - text: Moodle WiSe
+    href: https://moodle.uni-ulm.de/course/view.php?id=55215
+  right:
+  - icon: fa-github fa-lg
+    href: https://github.com/projektkurs-datascience/24-25
+  - icon: fa-info
+    href: about.html
+
+output:
+  html_document:
+    theme: cosmo
+    lib_dir: site_libs
+    self_contained: no
+    toc_depth: 3
+    toc_float:
+      collapsed: false
