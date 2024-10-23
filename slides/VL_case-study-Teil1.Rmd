@@ -14,6 +14,7 @@ output:
       ratio: "16:9"
     includes:
       in_header: style/header.html 
+#xaringan::inf_mr() #[Start Preview -> Type into console]
 ---
 
 
@@ -40,11 +41,13 @@ library(countdown)
 Deutschland hat europaweit eine der niedrigsten Arbeitslosenquoten:
 
 .pull-left[
-```{r, echo=FALSE, out.width='50%'}
+```{r, echo=FALSE, out.width='70%'}
 include_graphics("figs/eu_unemployment_2022.jpeg")
 ```
 
-.small[ Quelle: Fleck, A. (August 11, 2022). The State of Unemployment in Europe (Digital image). Retrieved October 02, 2024, from https://www.statista.com/chart/20834/unemployment-rates-eu-plus-uk/]
+.supersmall[ Quelle: [Fleck, A. (August 11, 2022). The State of Unemployment in Europe (Digital image).](https://www.statista.com/chart/20834/unemployment-rates-eu-plus-uk/) ]
+
+]
 
 --
 
@@ -68,11 +71,11 @@ Diese Case-Study dient als:
 - ökonomische und geographische Kenntnisse über Deutschland erhalten
 - Beispiel wie statistische und programmiertechnische Kenntnisse in der empirischen Arbeit eingesetzt werden können
 
+.instruction[In diesem Foliensatz nutze ich die magittr Pipe `%>%`, da dies mit dem Paket flipbookr nicht anders möglich ist. Es ist jedoch empfehlenswert grundsätzlich die Base R Pipe zu nutzen `|>`]
+
 ---
 
-class: center, middle
-
-background-image: url(figs/Download_Datasets.png);
+class: center, middle, inverse
 
 # Datensätze herunterladen
 
@@ -126,24 +129,6 @@ Woher beziehen wir unsere Informationen?
 
 ---
 
-
-## Nötige Pakete laden
-
----
-
-```{r pakete, message = T}
-library(readxl)
-library(skimr)
-library(tidyverse)
-```
-
-```{r, echo=FALSE, eval=FALSE}
-.question[Was bedeuten die "Messages" nach dem Laden von library(tidyverse)?]
-```
-
-
----
-
 ## Daten herunterladen
 
 - Daten können von URLs mit Befehlen aus den Paketen `readxl` und `readr` direkt eingelesen werden
@@ -163,9 +148,9 @@ library(tidyverse)
 
 ## Klonen Sie unsere Github Seite
 
-- Gehen Sie auf die [Github Seite des Projektkurses](https://github.com/projektkurs-datascience/23-24)
+- Gehen Sie auf die [Github Seite des Projektkurses](https://github.com/projektkurs-datascience/24-25)
 - Klicken Sie auf des grünen "Code" Button
-- Kopieren Sie sich die [angezeigte HTTPS](https://github.com/projektkurs-datascience/23-24.git)
+- Kopieren Sie sich die [angezeigte HTTPS](https://github.com/projektkurs-datascience/24-25.git)
 - Gehen Sie in Github Desktop und fügen dort die kopierte HTTPS in "Clone a repository" -> "URL"
 
 [Hier eine Step-by-Step Anleitung](https://docs.github.com/desktop/contributing-and-collaborating-using-github-desktop/adding-and-cloning-repositories/cloning-a-repository-from-github-to-github-desktop?platform=windows)
@@ -178,6 +163,22 @@ countdown(minutes = 5)
 
 ---
 
+
+## Nötige Pakete laden
+
+```{r pakete, message = T}
+library(readxl)
+library(skimr)
+library(tidyverse)
+```
+
+--
+
+.question[Was bedeuten die "Messages" nach dem Laden von library(tidyverse)?]
+
+
+---
+
 # Daten einlesen
 
 Unterschiedliche Dateien und unterschiedliche Tabellenblätter, was sollten wir verwenden?
@@ -185,9 +186,9 @@ Unterschiedliche Dateien und unterschiedliche Tabellenblätter, was sollten wir 
 ```{r}
 # Öffnen des ZIP-Archivs
 # Es sind zwei Tabellen in dem ZIP Archiv, wir interessieren uns für die Anzahl der Arbeitslosen und wählen diese mit dem kleinen [1] aus
-alo_name <- as.character(unzip("../case-study/data/Arbeitslose_2021.xlsx.zip", list = TRUE)$Name)
+alo_name <- as.character(unzip("../case-study/data/Arbeitslose_2022.xlsx.zip", list = TRUE)$Name)
 alo_name <- alo_name[1]
-unzip("../case-study/data/Arbeitslose_2021.xlsx.zip", alo_name)
+unzip("../case-study/data/Arbeitslose_2022.xlsx.zip", alo_name)
 ```
 --
 
@@ -228,7 +229,41 @@ head(alo_inhalt, 15)
 ## 15 Geschlecht 
 ```
 
---
+---
+
+```{r, eval=F}
+alo_inhalt <- read_xlsx(alo_name, sheet = "Inhaltsverzeichnis")
+head(alo_inhalt, 15)
+```
+
+.pull-left[
+```{r, message=FALSE, eval=FALSE}
+## # A tibble: 15 × 1
+##    Inhaltsverzeichnis     
+##    <chr>                  
+##  1 NA                     
+##  2 NA                     
+##  3 Arbeitslose - Zeitreihe
+##  4 NA                     
+##  5 NA                     
+##  6 Tabelle                
+##  7 Bestand an Arbeitslosen
+##  8 Kreiszusammenfassung   
+##  9 Übersicht nach Kreisen 
+## 10 NA                     
+## 11 Insgesamt              
+## 12 Rechtskreis            
+## 13 SGB III                
+## 14 SGB II                 
+## 15 Geschlecht 
+```
+]
+
+.pull-right[
+```{r, echo = F, out.width='60%'}
+include_graphics("./figs/Einlesen_Alo.png")
+```
+]
 
 **Alternative:** Schauen Sie sich die Excel-Datei in Excel oder LibreOffice an und entscheiden Sie dann, welches Tabellenblatt Sie einlesen möchten.
 
@@ -237,7 +272,7 @@ head(alo_inhalt, 15)
 ## Spezifizieren welche Spalten eingelesen werden sollen
 
 Welche Information benötigen wir aus der Tabelle
-  - Die Anzahl aller Arbeitslosen pro Gemeinde (d.h. SGB II und III gemeinsam) **aus dem Jahr 2021**
+  - Die Anzahl aller Arbeitslosen pro Gemeinde (d.h. SGB II und III gemeinsam) **aus dem Jahr 2022**
   - Die Anzahl der Arbeitslosen pro Gemeinde für einen bestimmten Rechtskreis (z.B. nur SGB II)
   - Die Anzahl der Arbeitslosen pro Gemeinde für einen bestimmten Rechtskreis und ein bestimmtes Alter (z.B. SGB II alle unter 25 Jahre)
 
@@ -246,7 +281,7 @@ Welche Information benötigen wir aus der Tabelle
 ## Spezifizieren welche Spalten eingelesen werden sollen
 
 Welche Information benötigen wir aus der Tabelle
-  - .alert[Die Anzahl aller Arbeitslosen pro Gemeinde (d.h. SGB II und III gemeinsam) **aus dem Jahr 2021**]
+  - .alert[Die Anzahl aller Arbeitslosen pro Gemeinde (d.h. SGB II und III gemeinsam) **aus dem Jahr 2022**]
   - Die Anzahl der Arbeitslosen pro Gemeinde für einen bestimmten Rechtskreis (z.B. nur SGB II)
   - Die Anzahl der Arbeitslosen pro Gemeinde für einen bestimmten Rechtskreis und ein bestimmtes Alter (z.B. SGB II alle unter 25 Jahre)
 
@@ -254,9 +289,17 @@ Welche Information benötigen wir aus der Tabelle
 
 .question[Was ist hier eine Beobachtung?]
 
---
+---
 
-Weiterhin benötigen wir noch die "Gemeinde-ID" und den Gemeindenamen.
+```{r, out.width='150%', echo = F}
+include_graphics("./figs/Alo_Ueberblick.png")
+```
+
+---
+
+## Spezifizieren welche Spalten eingelesen werden sollen
+
+Neben der Anzahl aller Arbeitslosen pro Gemeinde (d.h. SGB II und III gemeinsam) **aus dem Jahr 2022** benötigen wir noch die "Gemeinde-ID" und den Gemeindenamen.
 
 Wie können wir die von uns benötigte Information möglichst einfach extrahieren?
 --
@@ -266,23 +309,19 @@ Wie können wir die von uns benötigte Information möglichst einfach extrahiere
 
 ---
 
-```{r, out.width='120%', echo = F}
-include_graphics("./figs/Alo_Ueberblick.png")
-```
-
----
+## Spezifizieren welche Spalten eingelesen werden sollen
 
 `r chunk_reveal(chunk_name = "einlesen_alo")`
 
 ```{r einlesen_alo, include = F}
 alo_skip <- read_xlsx(alo_name, sheet = "Gesamt", skip = 8)
 
-alo_skip |> 
-  select(c(`...1`, Jahresdurchschnitte, `...3`)) |>
+alo_skip %>%
+  select(c(`...1`, Jahresdurchschnitte, `...3`)) %>%
   mutate(Regionalschluessel = str_extract(`...1`, "[[:digit:]]+"),
-         Gemeinde = str_extract(`...1`, "[A-Z].*")) |>
-  mutate(alo = as.numeric(`...3`)) |>
-  select(-c(`...1`, Jahresdurchschnitte, `...3`)) |>
+         Gemeinde = str_extract(`...1`, "[A-Z].*")) %>%
+  mutate(alo = as.numeric(`...3`)) %>%
+  select(-c(`...1`, Jahresdurchschnitte, `...3`)) %>%
   filter(!is.na(alo))
 
 
@@ -291,12 +330,12 @@ alo_skip |>
 ```{r, echo=TRUE, eval=FALSE}
 *#Abspeichern als Datensatz data_alo
   
-*data_alo <- alo_skip |> 
-  select(c(`...1`, Jahresdurchschnitte, `...3`)) |>
+*data_alo <- alo_skip %>% 
+  select(c(`...1`, Jahresdurchschnitte, `...3`)) %>%
   mutate(Regionalschluessel = str_extract(`...1`, "[[:digit:]]+"),
-         Gemeinde = str_extract(`...1`, "[A-Z].*")) |>
-  mutate(alo = as.numeric(`...3`)) |>
-  select(-c(`...1`, Jahresdurchschnitte, `...3`)) |>
+         Gemeinde = str_extract(`...1`, "[A-Z].*")) %>%
+  mutate(alo = as.numeric(`...3`)) %>%
+  select(-c(`...1`, Jahresdurchschnitte, `...3`)) %>%
   filter(!is.na(alo))
 
 data_alo <- data_alo[-c(1,2),]
@@ -308,12 +347,12 @@ unlink(alo_name)
 
 #Abspeichern als Datensatz data_alo
   
-data_alo <- alo_skip |> 
-  select(c(`...1`, Jahresdurchschnitte, `...3`)) |>
+data_alo <- alo_skip %>% 
+  select(c(`...1`, Jahresdurchschnitte, `...3`)) %>%
   mutate(Regionalschluessel = str_extract(`...1`, "[[:digit:]]+"),
-         Gemeinde = str_extract(`...1`, "[A-Z].*")) |>
-  mutate(alo = as.numeric(`...3`)) |>
-  select(-c(`...1`, Jahresdurchschnitte, `...3`)) |>
+         Gemeinde = str_extract(`...1`, "[A-Z].*")) %>%
+  mutate(alo = as.numeric(`...3`)) %>%
+  select(-c(`...1`, Jahresdurchschnitte, `...3`)) %>%
   filter(!is.na(alo))
 
 # Daten einlesen von Tabellenblatt Gesamt, ohne die ersten 8 Zeilen
@@ -336,10 +375,10 @@ data_alo <- data_alo[-c(1,2),]
 - Informationen aggregieren und mit anderen Quellen vergleichen
 --
 
-- Zunächst: Anzahl an Arbeitslosen für jedes **Bundesland** in 2021. 
+- Zunächst: Anzahl an Arbeitslosen für jedes **Bundesland** in 2022. 
   - zweistelligen `Regionalschluessel`
   - "Buchstaben" für jeden `Regionalschluessel` zählen (`nchar()` (number of characters))
-- **Alternative Datenquelle:** [Die Anzahl der Arbeitslosen für das Jahr 2021 unterteilt nach Ländern der Arbeitsagentur](https://statistik.arbeitsagentur.de/Statistikdaten/Detail/202112/iiia4/akt-dat-jz/akt-dat-jz-d-0-202112-xlsx.xlsx)
+- **Alternative Datenquelle:** [Die Anzahl der Arbeitslosen für das Jahr 2022 unterteilt nach Ländern der Arbeitsagentur](https://statistik.arbeitsagentur.de/Statistikdaten/Detail/202212/iiia4/akt-dat-jz/akt-dat-jz-d-0-202212-xlsx.xlsx)
   - Wichtig: Tabellenblatt 8
 
 ---
@@ -347,22 +386,22 @@ data_alo <- data_alo[-c(1,2),]
 `r chunk_reveal(chunk_name = "konsistenz_alo")`
 
 ```{r konsistenz_alo, include = F, message = T, eval=F}
-data_alo |>
-  filter(nchar(Regionalschluessel) == 2) |>
+data_alo %>%
+  filter(nchar(Regionalschluessel) == 2) %>%
   rename(bundesland = Regionalschluessel)
 ```
 
 ```{r, echo=FALSE}
-check_alo_bundesland <- data_alo |>
-  filter(nchar(Regionalschluessel) == 2) |>
+check_alo_bundesland <- data_alo %>%
+  filter(nchar(Regionalschluessel) == 2) %>%
   rename(bundesland = Regionalschluessel)
 ```
 
 ```{r, eval=F, echo=T}
 *# Abspeichern als check_alo_bundesland
 
-*check_alo_bundesland <- data_alo |>
-  filter(nchar(Regionalschluessel) == 2) |>
+*check_alo_bundesland <- data_alo %>%
+  filter(nchar(Regionalschluessel) == 2) %>%
   rename(bundesland = Regionalschluessel)
 ```
 
@@ -376,7 +415,7 @@ check_alo_bundesland
 ]
 
 .pull-right[
-```{r, out.width='65%'}
+```{r, out.width='65%', echo =F}
 include_graphics("./figs/Alo_Laender.png")
 ```
 
@@ -394,18 +433,18 @@ include_graphics("./figs/Alo_Laender.png")
 
 ```{r, eval=FALSE, echo=TRUE}
 # Nur Gemeindedaten nutzen, dann auf Bundeslandebende die Summe aus den Gemeindedaten berechnen
-alo_meta <- data_alo |> 
-  filter(nchar(Regionalschluessel) == 8) |>
+alo_meta <- data_alo %>% 
+  filter(nchar(Regionalschluessel) == 8) %>%
   mutate(landkreis = str_extract(Regionalschluessel, "^.{5}"),
          bundesland = str_extract(Regionalschluessel, "^.{2}"))
 
-alo_bundesland <- alo_meta |>
-  group_by(bundesland) |>
+alo_bundesland <- alo_meta %>%
+  group_by(bundesland) %>%
   summarise(total_alo = sum(alo))
 
-alo_landkreis <- alo_meta |>
-  group_by(landkreis) |>
-  summarise(total_alo = sum(alo)) |>
+alo_landkreis <- alo_meta %>%
+  group_by(landkreis) %>%
+  summarise(total_alo = sum(alo)) %>%
   rename(Regionalschluessel = landkreis)
 ```
 
@@ -414,9 +453,9 @@ alo_landkreis <- alo_meta |>
 `r chunk_reveal(chunk_name = "interne_konsistenz1")`
 
 ```{r interne_konsistenz1, include = F}
-data_alo |> 
-  filter(nchar(Regionalschluessel) == 8) |>
-  mutate(landkreis = str_extract(Regionalschluessel, "^.{5}")) |>
+data_alo %>% 
+  filter(nchar(Regionalschluessel) == 8) %>%
+  mutate(landkreis = str_extract(Regionalschluessel, "^.{5}")) %>%
   mutate(bundesland = str_extract(Regionalschluessel, "^.{2}")) ->
 alo_meta
 ```
@@ -426,8 +465,8 @@ alo_meta
 `r chunk_reveal(chunk_name = "interne_konsistenz2")`
 
 ```{r interne_konsistenz2, include = F}
-alo_meta |>
-  group_by(bundesland) |>
+alo_meta %>%
+  group_by(bundesland) %>%
   summarise(total_alo = sum(alo)) -> 
 alo_bundesland
 ```
@@ -437,9 +476,9 @@ alo_bundesland
 `r chunk_reveal(chunk_name = "interne_konsistenz3")`
 
 ```{r interne_konsistenz3, include = F}
-alo_meta |>
-  group_by(landkreis) |>
-  summarise(total_alo = sum(alo)) |>
+alo_meta %>%
+  group_by(landkreis) %>%
+  summarise(total_alo = sum(alo)) %>%
   rename(Regionalschluessel = landkreis) -> 
 alo_landkreis
 ```
@@ -461,7 +500,7 @@ Wir wollen nun die zwei Tabellen miteinander verbinden (besserer Überblick)
 left_join(check_alo_bundesland, alo_bundesland, by = "bundesland") ->
   check_consitency
 
-check_consitency |>
+check_consitency %>%
   mutate(diff = alo - total_alo)
 ```
 --
@@ -478,14 +517,14 @@ class: inverse, middle, center
 
 ## Pro-Kopf Verschuldung auf Gemeindeebene
 
-- Auf Gemeindeebene aus dem Jahr 2021
+- Auf Gemeindeebene aus dem Jahr 2022
 - Querschnittsdaten
 - Vom Statistischen Bundesamt direkt als Excel-Tabelle heruntergeladen (`r emo::ji("heavy_check_mark")`)
 
 .question[Welche Tabellenblätter sollten wir nutzen?]
 
 ```{r}
-excel_sheets("../case-study/data/Schulden_2021.xlsx")
+excel_sheets("../case-study/data/Schulden_2022.xlsx")
 ```
 
 ---
@@ -494,7 +533,7 @@ excel_sheets("../case-study/data/Schulden_2021.xlsx")
 
 - Nicht alle Informationen in **einem Tabellenblatt** enthalten
   - Viele separate Tabellenblätter
-  - Hier kommt die `for`-Schleife zum Einsatz
+  - Hier müssen wir potentiell eine Operation über mehrere Tabellenblättern anwenden, z.B. durch eine Schleife
 
 --
 
@@ -505,7 +544,7 @@ excel_sheets("../case-study/data/Schulden_2021.xlsx")
 ## Mehrere Tabellenblätter einlesen
 
 ```{r, message=FALSE}
-sh <- read_xlsx("../case-study/data/Schulden_2021.xlsx", sheet = "SH")
+sh <- read_xlsx("../case-study/data/Schulden_2022.xlsx", sheet = "SH")
 head(sh,20)
 ```
 
@@ -522,7 +561,7 @@ Wir benötigen:
 
 Variablenbezeichnungen beginnen in Zeile 5, d.h. wir ignorieren die ersten 4 Zeilen beim Einlesen.
 
-.questions[Was ist hier eine Beobachtung?]
+.question[Was ist hier eine Beobachtung?]
 
 ---
 
@@ -532,7 +571,7 @@ Der Übersicht halber wollen wir noch eine Spalte hinzufügen, welche den Namen 
 
 ```{r, eval=FALSE, message=FALSE, warning=FALSE}
 # Einlesen des Tabellenblattes "SH" ohne die ersten 5 Zeilen und nur die Spalten 1-7
-schulden_individuell <- read_xlsx("../case-study/data/Schulden_2021.xlsx", sheet = "SH", skip = 5)[1:7]
+schulden_individuell <- read_xlsx("../case-study/data/Schulden_2022.xlsx", sheet = "SH", skip = 5)[1:7]
 # Umbenennen der ersten 7 Spalten
 colnames(schulden_individuell) <- c("Regionalschluessel", "Gemeinde", 
                                     "Verwaltungsform", "Einwohner", "Schulden_gesamt", "Veraenderung_Vorjahr", "Schulden_pro_kopf")
@@ -547,7 +586,7 @@ colnames(schulden_individuell) <- c("Regionalschluessel", "Gemeinde",
 
 ```{r schulden_einlesen, message=FALSE, warning=FALSE, include = F}
 # Einlesen des Tabellenblattes "SH" ohne die ersten 5 Zeilen und nur die Spalten 1-7
-read_xlsx("../case-study/data/Schulden_2021.xlsx", sheet = "SH", skip = 5)[1:7] ->
+read_xlsx("../case-study/data/Schulden_2022.xlsx", sheet = "SH", skip = 5)[1:7] ->
   schulden_individuell
 
 # Umbenennen der ersten 7 Spalten
@@ -564,81 +603,39 @@ schulden_individuell
 
 ## Mehrere Tabellenblätter einlesen
 
-.instructions[Nun können wir genauso bei allen anderen Tabellenblättern vorgehen:]
+.instructions[Formen Sie Teams von zwei Personen und erarbeiten Sie auf Basis des Beispiels für ein Bundesland einen Code um alle Bundesländer in R einzulesen.]
 
---
+.alert[Nutzen Sie für diese Aufgabe **bwGPT**.]
 
-```{r, message=FALSE, eval=FALSE}
-# Daten mit for-Schleife einlesen (Struktur gleich wie im vorherigen Chunk)
-sheet_names <- excel_sheets("../case-study/data/Schulden_2021.xlsx")
-# Einlesen der Tabellenblätter 7-18 (alle Bundesländer)
-sheet_read <- sheet_names[7:18]
-*for (i in 1:length(sheet_read)){
-  tmp <- read_xlsx("../case-study/data/Schulden_2021.xlsx", sheet = sheet_read[i], skip = 5)[1:7]
-*  tmp$Bundesland <- sheet_read[i]
-  colnames(tmp) <- c("Regionalschluessel", "Gemeinde", "Verwaltungsform", 
-                     "Einwohner", "Schulden_gesamt", "Veraenderung_Vorjahr", "Schulden_pro_kopf", "Bundesland")
-  # Daten aller weiteren Tabellenblätter unter den aktuellen Datensatz anheften
-  schulden_individuell <- bind_rows(schulden_individuell, tmp)
-}
+Posten Sie ihren Code hier:
+
+```{r, echo = F, out.width='30%'}
+include_graphics("./figs/Code_mehrere_Tabellen.png")
 ```
 
----
-
-## Mehrere Tabellenblätter einlesen
-
-.instructions[Nun können wir genauso bei allen anderen Tabellenblättern vorgehen:]
-
-
-```{r, message=FALSE , eval=FALSE}
-# Daten mit for-Schleife einlesen (Struktur gleich wie im vorherigen Chunk)
-sheet_names <- excel_sheets("../case-study/data/Schulden_2021.xlsx")
-# Einlesen der Tabellenblätter 7-18 (alle Bundesländer)
-sheet_read <- sheet_names[7:18]
-for (i in 1:length(sheet_read)){
-  tmp <- read_xlsx("../case-study/data/Schulden_2021.xlsx", sheet = sheet_read[i], skip = 5)[1:7]
-*  tmp$Bundesland <- sheet_read[i]
-  colnames(tmp) <- c("Regionalschluessel", "Gemeinde", "Verwaltungsform", 
-                     "Einwohner", "Schulden_gesamt", "Veraenderung_Vorjahr", "Schulden_pro_kopf", "Bundesland")
-  # Daten aller weiteren Tabellenblätter unter den aktuellen Datensatz anheften
-  schulden_individuell <- bind_rows(schulden_individuell, tmp)
-}
-```
-
---
-
-Eine zusätzliche Spalte generieren, welche die Information pro Bundesland enthält
-
----
-
-`r chunk_reveal(chunk_name = "for_loop")`
-
-```{r for_loop, message=FALSE, warning=FALSE, include = F}
-# Daten mit for-Schleife einlesen (Struktur gleich wie im vorherigen Chunk)
-excel_sheets("../case-study/data/Schulden_2021.xlsx") ->
-  sheet_names
-
-# Einlesen der Tabellenblätter 7-18 (alle Bundesländer)
-sheet_names[7:18] ->
-  sheet_read
-
-length(sheet_read)
-
-for (i in 1:length(sheet_read)){
-  tmp <- read_xlsx("../case-study/data/Schulden_2021.xlsx", sheet = sheet_read[i], skip = 5)[1:7]
-  tmp$Bundesland <- sheet_read[i]
-  colnames(tmp) <- c("Regionalschluessel", "Gemeinde", "Verwaltungsform", 
-                     "Einwohner", "Schulden_gesamt", "Veraenderung_Vorjahr", "Schulden_pro_kopf", "Bundesland")
-  # Daten aller weiteren Tabellenblätter unter den aktuellen Datensatz anheften
-  schulden_individuell <- bind_rows(schulden_individuell, tmp)
-}
-
-schulden_individuell
+```{r, echo=FALSE}
+countdown(minutes = 10)
 ```
 
 ---
 
 ## Variablen umformen
+
+```{r, eval =T, echo = F}
+# Daten mit map_df() eine Vektorisierte Form um die Daten einzulesen (Struktur gleich wie im vorherigen Chunk)
+sheet_names <- excel_sheets("../case-study/data/Schulden_2022.xlsx")
+# Einlesen der Tabellenblätter 6-18 (alle Bundesländer)
+sheet_read <- sheet_names[6:18]
+
+# Vektorisierte Form mit purrr::map_df() um die unterschiedlichen Tabellenblätter einzulesen und die Daten zu einem Datensatz zusammenzufügen
+schulden_individuell <- map_df(sheet_read, function(sheet) {
+  tmp <- read_xlsx("../case-study/data/Schulden_2022.xlsx", sheet = sheet, skip = 5)[1:7]
+  tmp$Bundesland <- sheet
+  colnames(tmp) <- c("Regionalschluessel", "Gemeinde", "Verwaltungsform", 
+                     "Einwohner", "Schulden_gesamt", "Veraenderung_Vorjahr", "Schulden_pro_kopf", "Bundesland")
+  return(tmp)
+})
+```
 
 ```{r}
 head(schulden_individuell,15)
@@ -673,13 +670,13 @@ schulden_individuell[28,]
 ```{r schulden_umformen, message=FALSE, include = F}
 # Die Daten wurden noch nicht schön eingelesen, in der Excel Tabelle 
 # waren die Variablennamen über mehrere Reihen gezogen, dies müssen wir noch ausgleichen
-schulden_individuell |>
-  filter(!is.na(Regionalschluessel)) |>
-  mutate(Schulden_gesamt = as.numeric(Schulden_gesamt)) |>
-  mutate(Einwohner = as.numeric(Einwohner)) |>
-  mutate(Schulden_pro_kopf = as.numeric(Schulden_pro_kopf)) |>
-  mutate(landkreis = str_extract(Regionalschluessel, "^.{5}")) |>
-  select(-Veraenderung_Vorjahr) |>
+schulden_individuell %>%
+  filter(!is.na(Regionalschluessel)) %>%
+  mutate(Schulden_gesamt = as.numeric(Schulden_gesamt)) %>%
+  mutate(Einwohner = as.numeric(Einwohner)) %>%
+  mutate(Schulden_pro_kopf = as.numeric(Schulden_pro_kopf)) %>%
+  mutate(landkreis = str_extract(Regionalschluessel, "^.{5}")) %>%
+  select(-Veraenderung_Vorjahr) %>%
   #manche Landkreise haben keine Infos zu den Einwohnern, diese entfernen wir
   filter( !is.na( Einwohner )) ->
 schulden_bereinigt
@@ -699,52 +696,50 @@ class: middle, inverse, center
 
 - `Schulden_pro_Kopf_new` von Hand berechnen
 - **Beachte:**
-  - Geschweiften Klammern entfernen bei `Schulden_gesamt` (mit `str_remove_all`), als auch die Leerzeichen innerhalb der Zahlen (z.B. 15 653), was wir mit `gsub("[[:space:]]")` erreichen. 
+  - Geschweiften Klammern entfernen bei `Schulden_gesamt` (mit `gsub([{}])`), als auch die Leerzeichen innerhalb der Zahlen (z.B. 15 653), was wir mit `gsub("[[:space:]]")` erreichen. 
   - Tun wir das nicht, so würden wir wieder `NA`s im Datensatz erhalten
-  - Durch die ifelse Bedingung wird der Befehl `str_remove_all` nur angewendet, wenn tatsächlich geschweifte Klammern vorhanden sind
 
 .tiny[
+
 ```{r, warning=FALSE, message=FALSE, eval=FALSE}
 # Erstellen der Vergleichstabelle
-schulden_consistency <- schulden_individuell |>
-  filter( !is.na(Einwohner) & !is.na(Regionalschluessel) ) |>
-  mutate(Schulden_gesamt = ifelse(is.na(as.numeric(Schulden_gesamt))==TRUE, 
-                                  as.numeric(gsub("[[:space:]]", "", str_remove_all(Schulden_gesamt, "[{}]"))), 
-                                  as.numeric(Schulden_gesamt)),
-         Schulden_pro_kopf = ifelse(is.na(as.numeric(Schulden_pro_kopf))==TRUE, 
-                                    as.numeric(gsub("[[:space:]]", "", str_remove_all(Schulden_pro_kopf, "[{}]"))), 
-                                    as.numeric(Schulden_pro_kopf)),
-         Einwohner_num = ifelse(is.na(as.numeric(Einwohner))==TRUE, 
-                                as.numeric(gsub("[[:space:]]", "", str_remove_all(Einwohner, "[{}]"))), 
-                                as.numeric(Einwohner)),
-         Schulden_pro_kopf_new = round(Schulden_gesamt / Einwohner_num,2)) |>
-  relocate(Regionalschluessel, Einwohner, Einwohner_num, Schulden_pro_kopf, Schulden_pro_kopf_new ) |>
-  mutate(landkreis = str_extract(Regionalschluessel, "^.{5}"),
-         differenz = Schulden_pro_kopf - Schulden_pro_kopf_new) 
+schulden_consistency <- schulden_individuell %>%
+  filter(!is.na(Einwohner) & !is.na(Regionalschluessel)) %>%
+  mutate(
+    Einwohner_num = as.numeric(gsub("[[:space:]{}]", "", Einwohner)),
+    Schulden_gesamt = as.numeric(gsub("[[:space:]{}]", "", Schulden_gesamt)),
+    Schulden_pro_kopf = as.numeric(gsub("[[:space:]{}]", "", Schulden_pro_kopf)),
+    Schulden_pro_kopf_new = round(Schulden_gesamt / Einwohner_num, 2),
+    landkreis = str_extract(Regionalschluessel, "^.{5}"),
+    differenz = Schulden_pro_kopf - Schulden_pro_kopf_new
+  ) %>%
+  relocate(Regionalschluessel, Einwohner, Einwohner_num, Schulden_pro_kopf, Schulden_pro_kopf_new)
+
 ```
 
 ]
+
+--
+
+.question[Was macht **gsub()** und **str_extract()** hier genau? Und was sind **reguläre Ausdrücke**?]
+
 ---
 
 `r chunk_reveal(chunk_name = "schulden_konsistenz")`
 
 ```{r schulden_konsistenz, message=FALSE, warning=FALSE, include = F}
 # Erstellen der Vergleichstabelle
-schulden_individuell |>
-  filter( !is.na(Einwohner) & !is.na(Regionalschluessel) ) |>
-  mutate(Schulden_gesamt = ifelse(is.na(as.numeric(Schulden_gesamt))==TRUE, 
-                                  as.numeric(gsub("[[:space:]]", "", str_remove_all(Schulden_gesamt, "[{}]"))), 
-                                  as.numeric(Schulden_gesamt))) |>
-  mutate(Schulden_pro_kopf = ifelse(is.na(as.numeric(Schulden_pro_kopf))==TRUE, 
-                                    as.numeric(gsub("[[:space:]]", "", str_remove_all(Schulden_pro_kopf, "[{}]"))), 
-                                    as.numeric(Schulden_pro_kopf))) |>
-  mutate(Einwohner_num = ifelse(is.na(as.numeric(Einwohner))==TRUE, 
-                                as.numeric(gsub("[[:space:]]", "", str_remove_all(Einwohner, "[{}]"))), 
-                                as.numeric(Einwohner))) |>
-  mutate(Schulden_pro_kopf_new = round(Schulden_gesamt / Einwohner_num,2)) |>
-  relocate(Regionalschluessel, Einwohner, Einwohner_num, Schulden_pro_kopf, Schulden_pro_kopf_new ) |>
-  mutate(landkreis = str_extract(Regionalschluessel, "^.{5}"),
-         differenz = Schulden_pro_kopf - Schulden_pro_kopf_new) ->
+schulden_individuell %>%
+  filter(!is.na(Einwohner) & !is.na(Regionalschluessel)) %>%
+  mutate(
+    Einwohner_num = as.numeric(gsub("[[:space:]{}]", "", Einwohner)),
+    Schulden_gesamt = as.numeric(gsub("[[:space:]{}]", "", Schulden_gesamt)),
+    Schulden_pro_kopf = as.numeric(gsub("[[:space:]{}]", "", Schulden_pro_kopf)),
+    Schulden_pro_kopf_new = round(Schulden_gesamt / Einwohner_num, 2),
+    landkreis = str_extract(Regionalschluessel, "^.{5}"),
+    differenz = Schulden_pro_kopf - Schulden_pro_kopf_new
+  ) %>%
+  relocate(Regionalschluessel, Einwohner, Einwohner_num, Schulden_pro_kopf, Schulden_pro_kopf_new) -> 
 schulden_consistency
 ```
 
@@ -799,9 +794,9 @@ Nach dem Download bei den Statistischen Ämtern des Bundes und der Länder und e
 
 ```{r, warning=FALSE, message=FALSE}
 # Blatt 1.1 einlesen und die ersten 4 Zeilen skippen
-bip <- read_xlsx("../case-study/data/BIP_2022.xlsx", sheet="1.1", skip = 4)
-erwerb <- read_xlsx("../case-study/data/BIP_2022.xlsx", sheet="3.1", skip = 4)
-einwohner <- read_xlsx("../case-study/data/BIP_2022.xlsx", sheet = "5", skip = 4)
+bip <- read_xlsx("../case-study/data/BIP_2023.xlsx", sheet="1.1", skip = 4)
+erwerb <- read_xlsx("../case-study/data/BIP_2023.xlsx", sheet="3.1", skip = 4)
+einwohner <- read_xlsx("../case-study/data/BIP_2023.xlsx", sheet = "5", skip = 4)
 ```
 
 ---
@@ -811,9 +806,9 @@ einwohner <- read_xlsx("../case-study/data/BIP_2022.xlsx", sheet = "5", skip = 4
 ```{r bip_einlesen1, message=FALSE, warning=FALSE, include = F}
 # Zeile löschen in der die `Lfd. Nr.` nicht nummerisch ist
 # Zusätzliche Spalten löschen
-bip |> 
-  filter(is.na(as.numeric(`Lfd. Nr.`))==FALSE) |>
-  select(-c(`Lfd. Nr.`, `EU-Code`, `NUTS 1`, `NUTS 2`, `NUTS 3`, Land, Gebietseinheit)) |>
+bip %>% 
+  filter(is.na(as.numeric(`Lfd. Nr.`))==FALSE) %>%
+  select(-c(`Lfd. Nr.`, `EU-Code`, `NUTS 1`, `NUTS 2`, `NUTS 3`, Land, Gebietseinheit)) %>%
   rename(Regionalschluessel = `Regional-schlüssel`) ->
 bip_wide 
 ```
@@ -831,14 +826,14 @@ Entsprechend können wir bei den Erwerbstätigen und den Einwohnern vorgehen:
 ```{r bip_einlesen2, message=FALSE, warning=FALSE}
 # Zeile löschen in der die `Lfd. Nr.` nicht nummerisch ist
 # Zusätzliche Spalten löschen
-erwerb_wide <- erwerb |> 
-  filter(is.na(as.numeric(`Lfd. Nr.`))==FALSE) |>
-  select(-c(`Lfd. Nr.`, `EU-Code`, `NUTS 1`, `NUTS 2`, `NUTS 3`, Land, Gebietseinheit)) |>
+erwerb_wide <- erwerb %>% 
+  filter(is.na(as.numeric(`Lfd. Nr.`))==FALSE) %>%
+  select(-c(`Lfd. Nr.`, `EU-Code`, `NUTS 1`, `NUTS 2`, `NUTS 3`, Land, Gebietseinheit)) %>%
   rename(Regionalschluessel = `Regional-schlüssel`)
 
-einwohner_wide <- einwohner |>
-  filter(is.na(as.numeric(`Lfd. Nr.`))==FALSE) |>
-  select(-c(`Lfd. Nr.`, `EU-Code`, `NUTS 1`, `NUTS 2`, `NUTS 3`, Land, Gebietseinheit)) |>
+einwohner_wide <- einwohner %>%
+  filter(is.na(as.numeric(`Lfd. Nr.`))==FALSE) %>%
+  select(-c(`Lfd. Nr.`, `EU-Code`, `NUTS 1`, `NUTS 2`, `NUTS 3`, Land, Gebietseinheit)) %>%
   rename(Regionalschluessel = `Regional-schlüssel`)
 ```
 
@@ -866,7 +861,7 @@ head(bip_wide, 3)
 Datensatz ins `long`-Format überführen mit `pivot_longer`:
 
 ```{r, eval=FALSE}
-bip_long <- pivot_longer(bip_wide, cols = c("1992":"2021") , names_to = "Jahr", values_to = "BIP")
+bip_long <- pivot_longer(bip_wide, cols = c("1992":"2022") , names_to = "Jahr", values_to = "BIP")
 ```
 
 ```
@@ -888,8 +883,8 @@ BIP sollte normalerweise nummerisch sein:
 
 ```{r double, message=FALSE, warning=FALSE, include = F}
 #BIP von 1992 - 1999 umformen (als numerische Variable)
-bip_wide |>
-  select(`1992`:`1999`) |>
+bip_wide %>%
+  select(`1992`:`1999`) %>%
   mutate(across(is.character, as.double)) ->
 bip_double
 ```
@@ -902,13 +897,13 @@ Entsprechend dann bei den Einwohnern und Erwerbstätigen:
 
 ```{r, message=FALSE, warning=TRUE}
 # Erwerbstätige von 1992 - 1999 umformen (als numerische Variable)
-erwerb_double <- erwerb_wide |>
-  select(`1992`:`1999`) |>
+erwerb_double <- erwerb_wide %>%
+  select(`1992`:`1999`) %>%
   mutate(across(is.character, as.double))
 
 # Einwohner von 1992 - 1999 umformen (als numerische Variable)
-einwohner_double <- einwohner_wide |>
-  select(`1992`:`1999`) |>
+einwohner_double <- einwohner_wide %>%
+  select(`1992`:`1999`) %>%
   mutate(across(is.character, as.double))
 ```
 
@@ -919,10 +914,10 @@ einwohner_double <- einwohner_wide |>
 Wir überprüfen, welche Spalten die Warnung hervorgerufen haben und wo `NA`s erzeugt wurden
 
 ```{r, message=FALSE, warning=FALSE}
-bip_wide_test <- bip_wide |>
+bip_wide_test <- bip_wide %>%
   bind_cols(bip_double)
 
-head(filter(bip_wide_test, is.na(`1992...31`)))
+head(filter(bip_wide_test, is.na(`1992...32`)))
 ```
 
 ---
@@ -931,16 +926,16 @@ Eine Umwandlung zu `NA` geschieht bei den Werten bei denen `-` eingetragen wurde
 Somit können wir die Umwandlung in die Klasse `double` durchführen:
 
 ```{r, message=FALSE, warning=FALSE}
-bip_wide <- bip_wide |>
-  select(-(`1992`:`1999`)) |>
+bip_wide <- bip_wide %>%
+  select(-(`1992`:`1999`)) %>%
   bind_cols(bip_double) 
 
-erwerb_wide <- erwerb_wide |>
-  select(-(`1992`:`1999`)) |>
+erwerb_wide <- erwerb_wide %>%
+  select(-(`1992`:`1999`)) %>%
   bind_cols(erwerb_double) 
 
-einwohner_wide <- einwohner_wide |>
-  select(-(`1992`:`1999`)) |>
+einwohner_wide <- einwohner_wide %>%
+  select(-(`1992`:`1999`)) %>%
   bind_cols(einwohner_double) 
 ```
 
@@ -950,7 +945,7 @@ einwohner_wide <- einwohner_wide |>
 
 Nun können wir den Datensatz ins `long`-Format transferieren und nach dem Jahr sortieren.
 
-- Einwohner und Erwerbstätigen in 1000 Personen angegeben, daher Erwerbstätigen und Einwohner mit 1000 multiplizieren. 
+- Einwohner und Erwerbstätige sind in 1000 Personen angegeben, daher Erwerbstätige und Einwohner mit 1000 multiplizieren. 
 - BIP ist in 1 Mio. Euro angegeben, daher die Multiplikation mit 1 Mio.
 
 ---
@@ -959,9 +954,9 @@ Nun können wir den Datensatz ins `long`-Format transferieren und nach dem Jahr 
 
 ```{r long, message=FALSE, warning=FALSE, include = F}
 # BIP ins long-Format
-pivot_longer(bip_wide, cols = c("2000":"1999") , names_to = "Jahr", values_to = "bip") |>
+pivot_longer(bip_wide, cols = c("2000":"1999") , names_to = "Jahr", values_to = "bip") %>%
   mutate( Jahr = as.numeric(Jahr),
-          bip = bip * 1000000) |>
+          bip = bip * 1000000) %>%
   arrange( Jahr ) ->
 bip_long
 ```
@@ -972,15 +967,15 @@ Für die Erwerbstätigen und Einwohner entsprechend:
 
 ```{r, message=FALSE, warning=FALSE}
 # Anzahl der Erwerbstätigen ins long-Format
-erwerb_long <- pivot_longer(erwerb_wide, cols = c("2000":"1999") , names_to = "Jahr", values_to = "erw") |>
+erwerb_long <- pivot_longer(erwerb_wide, cols = c("2000":"1999") , names_to = "Jahr", values_to = "erw") %>%
   mutate( Jahr = as.numeric(Jahr),
-          erw = erw * 1000) |>
+          erw = erw * 1000) %>%
   arrange( Jahr )
 
 # Anzahl der Einwohner ins long-Format
-einwohner_long <- pivot_longer(einwohner_wide, cols = c("2000":"1999") , names_to = "Jahr", values_to = "einwohner") |>
+einwohner_long <- pivot_longer(einwohner_wide, cols = c("2000":"1999") , names_to = "Jahr", values_to = "einwohner") %>%
   mutate( Jahr = as.numeric(Jahr),
-          einwohner = einwohner * 1000) |>
+          einwohner = einwohner * 1000) %>%
   arrange( Jahr )
 ```
 
@@ -1014,7 +1009,7 @@ Das [OpenData Portal des Bundesamts für Kartographie und Geodäsie](https://gdz
 
 Zuerst müssen wir folgende Schritte unternehmen:
 - Informationen zur Verschuldung auf Landkreisebene aggregieren 
-- Daten zum BIP auf das Jahr 2021 einschränken. 
+- Daten zum BIP auf das Jahr 2022 einschränken. 
 - Datensätze anhand des Regionalschlüssels miteinander verbinden.
 
 Weiterhin können wir die geografischen Daten separat abspeichern und bei Bedarf anhand des Regionalschlüssels zu unserem Datensatz hinzumergen.
@@ -1025,11 +1020,12 @@ Weiterhin können wir die geografischen Daten separat abspeichern und bei Bedarf
 
 ```{r kombi1, message=FALSE, warning=FALSE, include = F}
 # Schulden auf Landkreisebene
-schulden_bereinigt |>
-  group_by(landkreis) |>
+schulden_bereinigt %>%
+  group_by(landkreis) %>%
   summarise( Schulden_pro_kopf_lk = sum(Schulden_gesamt)/sum(Einwohner), 
              Einwohner = sum(Einwohner), 
-             Schulden_gesamt = sum(Schulden_gesamt)) |>
+             Schulden_gesamt = sum(Schulden_gesamt)) %>%
+  ungroup() %>%
   rename(Regionalschluessel = landkreis) ->
 schulden_kombi
 ```
@@ -1040,9 +1036,9 @@ schulden_kombi
 
 ```{r kombi2, message=FALSE, warning=FALSE, include = F}
 
-# Anzahl an Erwerbstätigen für das Jahr 2021
-erwerb_long |>
-  filter(nchar(Regionalschluessel) == 5 & Jahr == 2021) |>
+# Anzahl an Erwerbstätigen für das Jahr 2022
+erwerb_long %>%
+  filter(nchar(Regionalschluessel) == 5 & Jahr == 2022) %>%
   select(-Jahr) ->
 erwerb_kombi
 ```
@@ -1052,9 +1048,9 @@ erwerb_kombi
 `r chunk_reveal(chunk_name = "kombi3")`
 
 ```{r kombi3, message=FALSE, warning=FALSE, include = F}
-# Anzahl an Einwohner für das Jahr 2021
-einwohner_long |>
-  filter(nchar(Regionalschluessel) == 5 & Jahr == 2021) |>
+# Anzahl an Einwohner für das Jahr 2022
+einwohner_long %>%
+  filter(nchar(Regionalschluessel) == 5 & Jahr == 2022) %>%
   select(-Jahr) ->
 einwohner_kombi
 ```
@@ -1065,10 +1061,10 @@ einwohner_kombi
 
 ```{r kombi4, message=FALSE, warning=FALSE, include = F}
 # Anzahl der Einwohner mit dem BIP verbinden um das BIP pro Kopf berechnen zu können
-left_join(bip_long, einwohner_long, by=c("Regionalschluessel", "Jahr")) |>
-  mutate(bip_pro_kopf = bip / einwohner) |>
+left_join(bip_long, einwohner_long, by=c("Regionalschluessel", "Jahr")) %>%
+  mutate(bip_pro_kopf = bip / einwohner) %>%
   # BIP auf Landkreisebene
-  filter(nchar(Regionalschluessel) == 5 & Jahr == 2021) |>
+  filter(nchar(Regionalschluessel) == 5 & Jahr == 2022) %>%
   select(-c(Jahr, einwohner)) ->
 bip_kombi
 ```
@@ -1082,10 +1078,10 @@ bip_kombi
 
 # Basisdatensatz -> Arbeitslosenzahlen pro Landkreis
 # Namen der Bundesländer zumergen
-alo_landkreis |> 
-  mutate(bundesland = str_extract(Regionalschluessel, "^.{2}")) |>
-  left_join(., schulden_kombi, by = "Regionalschluessel") |>
-  left_join(., bip_kombi, by = "Regionalschluessel") |>
+alo_landkreis %>% 
+  mutate(bundesland = str_extract(Regionalschluessel, "^.{2}")) %>%
+  left_join(., schulden_kombi, by = "Regionalschluessel") %>%
+  left_join(., bip_kombi, by = "Regionalschluessel") %>%
   # Zahl der Erwerbstätigen zumergen
   left_join(., erwerb_kombi, by = "Regionalschluessel") ->
 gesamtdaten
@@ -1102,8 +1098,10 @@ gesamtdaten
 
 Laden Sie sich das durchschnittliche [Arbeitnehmerentgelt pro Arbeitnehmer und Landkreis](https://www.statistikportal.de/de/veroeffentlichungen/arbeitnehmerentgelt) auf der Seite der Statistischen Ämter des Bundes und der Länder herunter und lesen Sie diesen in R ein.
 
-- Finden Sie in dem heruntergeladenen Datensatz heraus, was der Unterschied zwischen _Arbeitnehmerentgelt_ und _Bruttolöhne- und Gehälter_ ist.
-- Lesen Sie die für Sie relevante Tabelle _Bruttolöhne- und Gehälter_ in R ein.
+- Finden Sie in dem heruntergeladenen Datensatz heraus, was der Unterschied zwischen *Arbeitnehmerentgelt* und *Bruttolöhne- und Gehälter* ist.
+- Lesen Sie die für Sie relevante Tabelle *Bruttolöhne- und Gehälter* in R ein.
 - Bereinigen Sie die Tabelle, d.h. der Datensatz sollte danach `tidy` sein.
 - Berechnen Sie die Bruttolöhne pro Bundesland mit den Bruttolöhnen der einzelnen Landkreise als Konsistenzcheck.
+- Vergleichen Sie ihren Datensatz mit dem auf Github bereitgestellten Datensatz ("einkommen.rds"). Stimmen diese überein?
+- Verbinden Sie die Informationen zu den durchschnittlichen Einkommen mit dem *gesamtdatensatz* aus dem vorherigen Abschnitt.
 

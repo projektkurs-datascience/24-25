@@ -560,3 +560,12 @@ class: center, middle, inverse
     - Erspart ihnen viel Arbeit!
 - Wenn Sie eine Situation nicht lösen können, dann fragen Sie **sofort** nach Hilfe und warten nicht bis das Problem zu groß wird!
 
+---
+
+## Verständnisfragen
+
+```{r, echo=F, eval=T, fig.align='center', out.width='50%'}
+include_graphics("./figs/Git_Github.png")
+```
+
+
