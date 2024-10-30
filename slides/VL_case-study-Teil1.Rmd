@@ -1093,10 +1093,14 @@ gesamtdaten
 
 ---
 
-
 # Übungsaufgaben
 
 Laden Sie sich das durchschnittliche [Arbeitnehmerentgelt pro Arbeitnehmer und Landkreis](https://www.statistikportal.de/de/veroeffentlichungen/arbeitnehmerentgelt) auf der Seite der Statistischen Ämter des Bundes und der Länder herunter und lesen Sie diesen in R ein.
+
+- Bilden Sie ein Team von 4-5 Personen
+- Nutzung der Case-Study und bwGPT um die Aufgaben zu erledigen
+
+**Aufgabe:**
 
 - Finden Sie in dem heruntergeladenen Datensatz heraus, was der Unterschied zwischen *Arbeitnehmerentgelt* und *Bruttolöhne- und Gehälter* ist.
 - Lesen Sie die für Sie relevante Tabelle *Bruttolöhne- und Gehälter* in R ein.
@@ -1104,4 +1108,36 @@ Laden Sie sich das durchschnittliche [Arbeitnehmerentgelt pro Arbeitnehmer und L
 - Berechnen Sie die Bruttolöhne pro Bundesland mit den Bruttolöhnen der einzelnen Landkreise als Konsistenzcheck.
 - Vergleichen Sie ihren Datensatz mit dem auf Github bereitgestellten Datensatz ("einkommen.rds"). Stimmen diese überein?
 - Verbinden Sie die Informationen zu den durchschnittlichen Einkommen mit dem *gesamtdatensatz* aus dem vorherigen Abschnitt.
+
+```{r, echo=FALSE}
+countdown(minutes = 20)
+```
+
+---
+
+## Hinweise zum Prompting von bwGPT
+
+.pull-left[
+**Wie sollte ein Prompt aufgebaut sein?**
+
+- **Aufgabe:** Was soll ChatGPT tun? 
+    - Möglichst genau und spezifisch sein
+- **Instruktionen:** Wie soll ChatGPT es tun?
+    - Soll ChatGPT eine besondere Persona sein?
+    - Beispiele für den gewünschten Output mitgeben
+    - ChatGPT fragen zur Lösung Schritt-für-Schritt zu kommen
+- **Kontext:** Was sollte ChatGPT zu seiner Aufgabe wissen?
+    - Wie passt die Aufgabe z.B. zur Vorlesung die Sie gerade besuchen?
+]
+
+.pull-right[
+**Wenn Sie nicht weiter wissen, dann Fragen Sie ChatGPT welche Infos es noch benötigt**
+
+- "Sag mir, welche Informationen du benötigst, um ...“
+- "Stelle mir 5 Fragen, die dir helfen werden, mir die bestmögliche Antwort zu geben."
+  	
+**Wenn Sie glauben ChatGPT hat einen Fehler gemacht, dann sagen Sie ihm dies**
+
+**Komplexe Aufgaben in kleine Unteraufgaben herunterbrechen**
+]
 
