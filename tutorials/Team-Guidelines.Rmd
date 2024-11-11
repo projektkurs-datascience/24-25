@@ -1,5 +1,5 @@
 ---
-title: "Teambuilding Guidelines"
+title: "Empfehlungen für eine gelungende Zusammenarbeit im Team"
 output: 
   html_document:
     theme: cosmo
@@ -7,64 +7,61 @@ output:
     toc_float: true
 ---
 
-Da bisher wahrscheinlich die wenigsten von ihnen in Teams an größeren Projekten gearbeitet haben, würde ich ihnen gerne einige Tipps zur Strukturierung ihrer Teamarbeit an die Hand geben. Wenn Sie diese Tipps beherzigen kann aus ihrer Gruppe ein gut funktionierendes Team werden, wodurch die Zusammenarbeit Spaß macht und das Ergebnis sich nachher sehen lassen kann.
+Da bisher wahrscheinlich die wenigsten von Ihnen in Teams an größeren Projekten gearbeitet haben, würden wir Ihnen gerne einige Tipps zur Strukturierung Ihrer Teamarbeit an die Hand geben. Wenn Sie diese Tipps beherzigen, kann aus Ihrer Gruppe ein gut funktionierendes Team werden, wodurch die Zusammenarbeit Spaß macht und das Ergebnis sich nachher sehen lassen kann.
 
-Die Arbeit im Team ist sowohl in der Forschung, als auch im Unternehmen essentiell wichtig. Dabei werden Sie auf unterschiedliche Charaktere in ihrem Team stoßen, mit denen Sie lernen sollten umzugehen. Diesen Skill sollten Sie unserer Meinung nach bereits im Studium erwerben, da die Arbeit in einem Team den Lernerfolg im Studium und den sozialen Zusammenhalt stärkt, solange ein fairer Umgang miteinander gegeben ist und jeder seinen/ihren Teil zum Erfolg des Teams beiträgt. Sie werden schnell merken, dass jede/r seine Stärken in unterschiedlichen Bereichen hat. Nutzen Sie ihre Stärken und erklären Sie ihre Antworten auf Aufgaben ihren Teammitgliedern, denn nur wenn Sie etwas gut, schlüssig und prägnant erklären können, haben Sie es tatsächlich verstanden!
+Die Arbeit im Team ist sowohl in der Forschung als auch in Unternehmen essentiell wichtig. Dabei werden Sie auf unterschiedliche Charaktere in Ihrem Team stoßen, mit denen Sie lernen sollten umzugehen. Diese Fähigkeit sollten Sie unserer Meinung nach bereits im Studium erwerben, da die Arbeit in einem Team den Lernerfolg und den sozialen Zusammenhalt stärkt, solange ein fairer Umgang miteinander gegeben ist und jeder seinen Teil zum Erfolg des Teams beiträgt. Sie werden schnell merken, dass jeder seine Stärken in unterschiedlichen Bereichen hat. Nutzen Sie diese Stärken und erklären Sie alles, was Sie im Projekt tun Ihren Teammitgliedern, denn nur wenn Sie etwas gut, schlüssig und prägnant erklären können, haben Sie es tatsächlich verstanden!
 
-Sie sollten **als Team** am Ende gemeinsam **eine Projektarbeit** über Github **abgeben**, doch es empfiehlt sich den Weg zu ihrem Ziel möglichst gut zu strukturieren. Durch folgende Aufgabenverteilungen können Sie dies erreichen:
+Stellen Sie sicher, dass alle Teammitglieder die Möglichkeit haben, ihre Ideen einzubringen und dass unterschiedliche Perspektiven wertgeschätzt werden.
+
+Sie sollten **als Team** am Ende gemeinsam **eine Projektarbeit** über GitHub **abgeben**. Es empfiehlt sich jedoch, den Weg zu Ihrem Ziel möglichst gut zu strukturieren. Durch folgende Aufgabenverteilungen können Sie dies erreichen:
 
 # Rollenverteilung in Teams
 
-In jedem Projekt sollten Sie drei Rollen unter den Teammitgliedern verteilen. Diese Rollen sollten für jedes Projekt wechseln. Diese Rollen sind: **Koordinator/in**, **Verantwortliche/r** und **Kontrolleur/in**. Die Aufgaben der einzelnen Rollen sind wie folgt definiert:
+In jedem Projekt sollten Sie drei Rollen unter den Teammitgliedern verteilen. 
+Die Rollen sind: **Koordinator/in**, **Verantwortliche/r** und **Kontrolleur/in**. 
 
-- Bestimmen Sie einen **Koordinator/in** für ihre Projektausarbeitung. Die **Aufgaben des/der Koordinator/in** beinhalten hauptsächlich **organisatorische Elemente** innerhalb des Projekts:
-    - Erstellen eines Zeitplans bis wann welche Aufgabenteile erledigt werden sollen
+Die Aufgaben der einzelnen Rollen sind wie folgt definiert:
+
+- Bestimmen Sie einen **Koordinator/eine Koordinatorin** für Ihre Projektausarbeitung. Die **Aufgaben des Koordinators/der Koordinatorin** beinhalten hauptsächlich **organisatorische Elemente** innerhalb des Projekts:
+    - Erstellen eines Zeitplans, bis wann welche Aufgabenteile erledigt werden sollen
     - Festlegen, welche Aufgabenteile welches Teammitglied übernimmt
-    - Regelmäßige Treffen aller Teammitglieder organisieren (sowohl Treffen in Präsenz (z.B. im Tutorium), oder auch per Zoom sind denkbar) $\rightarrow$ Festlegen, welche Aufgaben bis zum Treffen erledigt sein sollten
-    - Festlegen wie die Teammitglieder miteinander kommunizieren und sich abstimmen
-    - **Wichtig:** Muss sicherstellen, dass jedes Teammitglied alle Schritte (Code + Antwort) der einzelnen Aufgaben verstanden hat (d.h. der/die Koordinator/in muss dafür Sorgen, dass der/die **Verantwortliche einer Aufgabe** diese kurz und schlüssig erläutern kann und dies in einem Teammeeting auch tut)
+    - Regelmäßige Treffen aller Teammitglieder organisieren $\rightarrow$ Festlegen, welche Aufgaben bis zum Treffen erledigt sein sollten
+    - Klare Kommunikationskanäle definieren (z.B. E-Mail, RocketChat, WhatsApp), um die Erreichbarkeit und den Informationsfluss im Team zu gewährleisten.
+    - **Wichtig:** Muss sicherstellen, dass jedes Teammitglied alle Schritte (Code + Antwort) der einzelnen Aufgaben verstanden hat (d.h. der/die Koordinator/in muss dafür sorgen, dass der/die **Verantwortliche einer Aufgabe** diese kurz und schlüssig erläutern kann und dies in einem Teammeeting auch tut)
     - Der/Die Koordinator/in hält alle bei der Stange und stellt sicher, dass alle an der Projektausarbeitung beteiligt sind
+    - Der/Die Koordinator/in hält regelmäßige Feedback-Runden in den Teammeetings ab, um den Fortschritt im Projekt zu besprechen und eventuelle Probleme frühzeitig zu erkennen.
     - Über den/die Koordinator/in läuft die Kommunikation mit dem Dozenten, falls Probleme in der Gruppe auftauchen sollten
-    - Das Feedback zur Projektausarbeitung, welches durch Review Reports und den Dozenten gegeben wird sollte vom Koordinator/in an die Teammitglieder kommuniziert werden.
+    - Das Feedback zur Projektausarbeitung, welches durch Review Reports gegeben wird, sollte vom Koordinator/in an die Teammitglieder kommuniziert werden.
 
 - Bestimmen Sie für **jede Aufgabe eine/n Verantwortliche/n und eine/n Kontrolleur/in**:
     - Der/Die **Verantwortliche** ist zuständig:
-        - Für die Bearbeitung der ihm/ihr zugewiesene Aufgaben (Schreibt den Code + die Antwort)
-        - Achtet auf eine schöne und saubere Gestaltung der Grafiken/Tabellen in der ihm/ihr zugewiesenen Aufgaben
-        - Achtet auf kurze und prägnante Sätze bei seinen/ihren Antworten in der ihm/ihr zugewiesenen Aufgaben
+        - Für die Bearbeitung der ihm/ihr zugewiesenen Aufgaben
+        - Achtet auf eine schöne und saubere Gestaltung der Grafiken/Tabellen in den ihm/ihr zugewiesenen Aufgaben
+        - Achtet auf kurze und prägnante Sätze bei seinen/ihren Antworten in den ihm/ihr zugewiesenen Aufgaben
     - Der/Die **Kontrolleur/in** ist zuständig:
         - Den Code der Aufgabe gegenzuchecken und auf Fehler zu überprüfen
-        - Schaubilder und Tabellen zu optimieren. Falls hier eine größere Nacharbeit nötig ist dies mit dem/der Verantwortlichen der Aufgabe zusammen überarbeiten
+        - Schaubilder und Tabellen zu optimieren. Falls hier eine größere Nacharbeit nötig ist, dies mit dem/der Verantwortlichen der Aufgabe zusammen zu überarbeiten
         - Die Antwort für die Aufgabe gegenzuchecken und auf inhaltliche Fehler und Konsistenz zu überprüfen
-        - Die Antwort für die Aufgabe kurz und prägnent zu halten und diese gegebenenfalls umzuformulieren oder redundante Elemente herauszulöschen
-        - Die Antwort für die Aufgabe auf Rechtschreibung + Satzbau gegenzuchecken
+        - Die Antwort für die Aufgabe kurz und prägnant zu halten und diese gegebenenfalls umzuformulieren oder redundante Elemente herauszulöschen
+        - Die Antwort für die Aufgabe auf Rechtschreibung und Satzbau gegenzuchecken
 
-- Es sollte **jedes Teammitglied bei 1/3 der Aufgaben** die Rolle des/der **Verantwortlichen** innehaben
-- Der/Die Koordinator/in eines Projekts sollte bei 2-3 Aufgaben die Rolle des/der **Kontrolleur/in** innehaben, die restlichen Aufgaben sollten von den anderen Gruppenmitgliedern kontrolliert werden. Der/Die Koordinator/in verteilt die Aufgaben entsprechend auf die Teammitglieder.
-- Beim Screencast in den Projekten 2 und 3 eines jeden Semesters sollen alle Gruppenmitglieder beteiligt sein. Verteilen Sie die Erstellung des Storyboards (was sollte in dem Screencast gesagt werden), die Erstellung der Präsentation und die eigentliche Aufnahme des Screencast auf unterschiedliche Teammitglieder. Der/Die Koordinator/in sollte hierbei die Aufgaben verteilen und darauf achten, dass alle Teammitglieder an dem Screencast beteiligt sind.
+- Es sollte **jedes Teammitglied bei einem Drittel der Aufgaben** die Rolle des/der **Verantwortlichen** innehaben.
+- Beim Screencast in den Projekten 2 und 3 eines jeden Semesters sollen alle Gruppenmitglieder beteiligt sein. Verteilen Sie die Erstellung des Storyboards (was sollte in dem Screencast gesagt werden), die Erstellung der Präsentation und die eigentliche Aufnahme des Screencasts auf unterschiedliche Teammitglieder. Der/Die Koordinator/in sollte hierbei die Aufgaben verteilen und darauf achten, dass alle Teammitglieder an dem Screencast beteiligt sind.
 
-$\rightarrow$ Bitte dokumentieren Sie zu Beginn jeder neuen Projektarbeit, wer welche Rolle im Team bzw. pro Aufgabe innehat. Diese Dokumentation können Sie beispielsweise in ihrem Github Repository ablegen, so kann jedes Gruppenmitglied seine Verantwortlichkeiten einsehen und Sie können bei Schwierigkeiten in der Gruppe auf das von ihnen zuvor gemeinsam vereinbarte Dokument verweisen.  
+**Tipp:** Dokumentieren Sie zu Beginn jeder neuen Projektarbeit, wer welche Rolle im Team bzw. pro Aufgabe innehat. Diese Dokumentation können Sie beispielsweise in Ihrem GitHub Repository ablegen, so kann jedes Gruppenmitglied seine Verantwortlichkeiten einsehen und Sie können bei Schwierigkeiten in der Gruppe auf das von Ihnen zuvor gemeinsam vereinbarte Dokument verweisen.
 
 # Was ist sonst noch wichtig für die Teamarbeit?
 
 - Treffen Sie sich regelmäßig. Definieren Sie, was die einzelnen Teammitglieder bis zum Treffen erledigt haben sollten.
 - Bereiten Sie sich auf die Treffen vor. Überlegen Sie sich, welche Fragen Sie haben und welche Probleme Sie in den Teammeetings lösen möchten.
-- Formulieren Sie ihre (realistischen) Erwartungen an die Teammitglieder und schreiben diese vor der Projektarbeit auf (siehe "Teamvertrag")!
+- Formulieren Sie Ihre (realistischen) Erwartungen bezüglich des Projekts an die Teammitglieder
+- Etablieren Sie klare Kommunikationsregeln, um Missverständnisse zu vermeiden, und fördern Sie eine offene Feedback-Kultur innerhalb des Teams.
+- Achten Sie darauf, dass alle Teammitglieder die Möglichkeit haben, sich einzubringen, und fördern Sie den Austausch unterschiedlicher Perspektiven.
 
 # Was ist bei Problemen im Team zu tun?
 
-- Wenden Sie sich an den Übungsleiter, wenn ein Konflikt auftritt, der nicht im Team gelöst werden kann. Der Übungsleiter dient ihnen als Mediator und kann nützliche Tipps zur Gruppenarbeit geben und zwischen den einzelnen Teammitgliedern vermitteln. Sollte in dem Gespräch keine Lösung gefunden werden, so wird der Dozent in einem kurz danach stattfindenden Gespräch mit einbezogen.
-- Umgang mit unkooperativen Teammitgliedern: 
-    - Wenn sich ein Teammitglied weigert, an der Projektausarbeitung mitzuarbeiten, so sollten Sie diese Person frühzeitig zur Rede stellen. Als ultimative Konsequenz können Sie als Team diese Person von der abgegeben **Arbeit streichen**. Dies bedeutet, dass das **unkooperative Teammitglied** für diese Projektausarbeitung **keine Punkte** bekommt. Da es sich hier um eine sehr harte Sanktionierung der Gruppe handelt, muss frühzeitig (spätestens nach 1,5 Wochen nach Beginn der Ausarbeitung) mit dem Übungsleiter Kontakt aufgenommen werden das eine solche Maßnahme geplant ist, falls sich nichts an der aktuellen Situation ändert. Bitte legen Sie in einer E-Mail dar, welche Schritte bis zu diesem Zeitpunkt von der Gruppe unternommen wurden um eine Kooperation einzufordern. Die Konsequenz wäre, dass die Gruppe dann eine Ausarbeitung zu zweit abgibt und das unkooperative Teammitglied eine Ausarbeitung alleine abzugeben hat.
-    
-Wie Sie feststellen werden, ist Gruppenarbeit nicht immer einfach - Teammitglieder können sich manchmal nicht auf Gruppensitzungen vorbereiten oder daran teilnehmen, und Konflikte ergeben sich oft auch aus unterschiedlichen Fähigkeits,- und Anforderungsprofilen oder durch eine unterschiedliche Arbeitsethik. Wenn Teams jedoch gut miteinander zusammenarbeiten und kommunizieren, machen die Vorteile die Schwierigkeiten mehr als wett.
+- Wenden Sie sich an den **Übungsleiter und Dozenten**, wenn ein **Konflikt auftritt**, der nicht im Team gelöst werden kann. Der Übungsleiter dient Ihnen als **Mediator** und kann nützliche Tipps zur Gruppenarbeit geben und zwischen den einzelnen Teammitgliedern vermitteln.
+- Umgang mit unkooperativen Teammitgliedern:
+    - Wenn sich ein Teammitglied weigert, an der Projektausarbeitung mitzuarbeiten, so sollten Sie diese Person frühzeitig zur Rede stellen. Als ultimative Konsequenz können Sie als Team diese Person von der abgegebenen **Arbeit streichen**. Dies bedeutet, dass das **unkooperative Teammitglied** für diese Projektausarbeitung **keine Punkte** bekommt. Da es sich hier um eine sehr harte Sanktionierung der Gruppe handelt, muss **frühzeitig** (spätestens 1,5 Wochen nach Beginn der Ausarbeitung) mit dem Übungsleiter und Dozent Kontakt aufgenommen werden, dass eine solche Maßnahme geplant ist, falls sich nichts an der aktuellen Situation ändert. Bitte legen Sie in einer E-Mail dar, welche Schritte bis zu diesem Zeitpunkt von der Gruppe unternommen wurden, um eine Kooperation einzufordern. Die Konsequenz wäre, dass die Gruppe dann eine Ausarbeitung zu zweit abgibt und das unkooperative Teammitglied eine Ausarbeitung alleine abzugeben hat.
 
-# Erstellung eines Teamvertrags
-
-Notieren Sie in ihrem Teamvertrag ihre Erwartungen als Team an die Projektausarbeitung. Einigen Sie sich darauf, was Sie als Team leisten möchten und was dafür die Erwartungen an die einzelnen Teammitglieder sind, bezüglich deren Beitrag zum Projekt.
-
-Sie können sich mit jedem oder allen Aspekten der oben genannten Aufgaben befassen - Vorbereitung auf und Teilnahme an Gruppentreffen, Sicherstellung, dass jeder alle Lösungen versteht, offene, aber respektvolle Kommunikation bei Konflikten usw. Jedes Teammitglied sollte den Teamvertrag in Github mit seinem Namen "unterschreiben" (es reicht hier das die jeweilige Person seinen Namen zum Dokument committet). Dadurch zeigt jedes Gruppenmitglied, dass es diese Erwartungen akzeptiert und die Absicht hat, sie zu erfüllen. Der Teamvertrag sollte spätestens eine Woche nach Projektbeginn finalisiert sein und ein Issue auf GitHub eröffnet werden, dass der Teamvertrag fertig ist.
-
-Diese Erwartungen sind zu Ihrem Nutzen und Vorteil - sie werden nicht benotet oder kommentiert, es sei denn, Sie bitten ausdrücklich um Kommentare. 
-
-Beachten Sie jedoch, dass Sie sich selbst die besten Chancen einräumen, wenn Sie die Liste recht ausführlich und nicht unrealistisch gestalten. Zum Beispiel: "Wir werden jedes Problem in jeder Aufgabe vollständig lösen, bevor wir uns treffen" oder "Wir werden bei jeder Aufgabe alle Punkte erreichen" oder "Wir werden niemals ein Treffen versäumen" sind wahrscheinlich unrealistisch, aber "Wir werden versuchen, die Probleme individuell zu lösen, bevor wir uns treffen" und "Wir werden sicherstellen, dass jeder, der ein Treffen aus gutem Grund versäumt, die Arbeit nachholen kann" sind realistisch.
+Wie Sie feststellen werden, ist Gruppenarbeit nicht immer einfach – Teammitglieder können sich manchmal nicht auf Gruppensitzungen vorbereiten oder daran teilnehmen, und Konflikte ergeben sich oft auch aus unterschiedlichen Fähigkeits- und Anforderungsprofilen oder durch eine unterschiedliche Arbeitsethik. Wenn Teams jedoch gut miteinander zusammenarbeiten und kommunizieren, machen die Vorteile die Schwierigkeiten mehr als wett.
