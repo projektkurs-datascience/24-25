@@ -1367,15 +1367,15 @@ Karten sind eine schöne Art geografisch unterschiedliche Informationen darzuste
 
 ---
 
-## Aufgabe - Eigene Grafik zum Einkommen erstellen
+### Aufgabe - Eigene Grafik erstellen
 
 .instructions[**Ziel:** Erstellen und interpretieren Sie effektive Visualisierungen der Einkommensverteilung in Deutschland.]
 
 **Ablauf:**
 
-- Gruppenbildung (4-5 Personen): Rollen vergeben - wer kümmert sich um was? (Prompting, Coding, Grafik auswählen, Upload,... ).
+- Gruppenbildung (4-5 Personen)
 - Datenauswahl & Analyse: Welche Information möchten Sie visualisieren? (Zeitreihe oder Querschnitt aus 2022?)
-- Visualisierung: Was ist die geeignete Grafik für ihre Fragestellung? Lassen Sie sich von [R Graph Gallery](https://r-graph-gallery.com/) inspirieren und erstellen Sie die für Sie passende Grafik in R (mittels ggplot2) 
+- Visualisierung: Was ist die geeignete Grafik für ihre Fragestellung? Lassen Sie sich von [R Graph Gallery](https://r-graph-gallery.com/) oder der [Case-Study](https://projektkurs-data-science-ulm2425.netlify.app/case-study/case_study_germany_2) inspirieren und erstellen Sie die für Sie passende Grafik in R
     - Nutzen Sie die [R Graph Gallery](https://r-graph-gallery.com/) und [bwGPT](gpt.scc.kit.edu/) für die Erstellung
 - Interpretation der Grafik: Diskutieren Sie die Grafik in der Gruppe
 - Upload: Code für Grafik + kurze Interpretation im Google Forms hochladen: https://forms.gle/R4qJEegZnFoTHU7f7
@@ -1542,16 +1542,3 @@ $rho$ | Beschreibung (nährungsweise)
 - Daten in R einlesen
 - Diese Daten kompakt mittels Tabellen und Grafiken beschreiben 
 - Den Zusammenhang einzelner Variablen untersuchen
-
----
-
-## Übungsaufgaben
-
-Im ersten Teil der Case Study hatten Sie sich noch die durchschnittlichen Einkommen auf Landkreisebene in R eingelesen. Nun sollten Sie diese Tabelle deskriptiv analysieren:
-
-- Erstellen Sie eine deskriptive Tabelle, welche das Einkommen für das Jahr 2022 darstellt. Wie ist hier die Verteilung der Einkommen?
-  - Beschreiben Sie Mittelwert, Standardabweichung, sowie Median
-- Erstellen Sie ein Liniendiagramm zu der Entwicklung des Einkommensniveaus in den einzelnen Landkreisen seit 2000. Sie können sich hierbei an dem Diagramm zum BIP pro Kopf orientieren.
-  - Hinweis: Mergen Sie zu dem Datensatz "Einkommen" zuerst noch die Information zu "Landkreis_name, Bundesland_name und ost_name" hinzu (siehe auch hierzu [diesen Abschnitt](https://projektkurs-data-science-ulm2425.netlify.app/case-study/case_study_germany_2#bruttoinlandsprodukt-pro-kopf))
-- Erstellen Sie eine Karte zum Einkommensniveau der einzelnen Landkreise. Sie können sich hierbei an der Karte zur Verschuldung orientieren.
-- Erstellen Sie eine Korrelationstablle zwischen Arbeitslosenquote, Anteil Schulden, BIP pro Kopf und Einkommen. Sie können sich hierbei an der [Tabelle der Korrleationen aus diesem Abschnitt](https://projektkurs-data-science-ulm2425.netlify.app/case-study/case_study_germany_2#interpretation-der-korrelation) orientieren.
