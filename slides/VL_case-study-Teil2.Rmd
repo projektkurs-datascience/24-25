@@ -1396,6 +1396,34 @@ countdown(minutes = 30)
 
 ---
 
+## Hinweise zum Prompting von bwGPT
+
+.pull-left[
+**Wie sollte ein Prompt aufgebaut sein?**
+
+- **Aufgabe:** Was soll ChatGPT tun? 
+    - Möglichst genau und spezifisch sein
+- **Instruktionen:** Wie soll ChatGPT es tun?
+    - Soll ChatGPT eine besondere Persona sein?
+    - Beispiele für den gewünschten Output mitgeben
+    - ChatGPT fragen zur Lösung Schritt-für-Schritt zu kommen
+- **Kontext:** Was sollte ChatGPT zu seiner Aufgabe wissen?
+    - Wie passt die Aufgabe z.B. zur Vorlesung die Sie gerade besuchen?
+]
+
+.pull-right[
+**Wenn Sie nicht weiter wissen, dann Fragen Sie ChatGPT welche Infos es noch benötigt**
+
+- "Sag mir, welche Informationen du benötigst, um ...“
+- "Stelle mir 5 Fragen, die dir helfen werden, mir die bestmögliche Antwort zu geben."
+  	
+**Wenn Sie glauben ChatGPT hat einen Fehler gemacht, dann sagen Sie ihm dies**
+
+**Komplexe Aufgaben in kleine Unteraufgaben herunterbrechen**
+]
+
+---
+
 class: inverse, center, middle
 
 # Bivariate deskriptive Analyse

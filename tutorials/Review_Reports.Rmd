@@ -66,9 +66,10 @@ Sie führen den Peer-Review im sogenannten Double-Blind-Verfahren durch. D.h. we
 
 - Der Review Report sollte 1/2 bis maximal 1 Seite umfassen
 - Er sollte im Fließtext verfasst sein, wobei Sie sich an der Beantwortung der vorherigen Fragen orientieren können
+- Der Review Report sollte in die drei Blöcke **Zusammenfassung**, **Positive Aspekte**, **Kritikpunkte** unterteilt sein
 - Er sollte _konstruktiv_ und _mit konkreten Verbesserungsvorschlägen_ verfasst werden
     - Konzentrieren Sie sich auf die 2-3 wichtigsten Punkte, die Ihnen auffallen. Sprechen Sie nicht jeden Grammatik- oder Rechtschreibfehler an, doch wenn die Ausarbeitung insgesamt schlecht geschrieben ist (viele Wiederholungen)
-- Er sollte als github-Dokument verfasst werden (Änderung im YAML-Header, Beispieldatei wurde in ihr Repositorium gepushed)
+- Achten Sie darauf ihren Review Report am Ende _zu knitten_
 
 # Subjektive Einschätzung der _eigenen_ Projektausarbeitung
 
