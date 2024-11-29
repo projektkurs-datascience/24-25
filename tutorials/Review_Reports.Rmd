@@ -40,22 +40,31 @@ Sie führen den Peer-Review im sogenannten Double-Blind-Verfahren durch. D.h. we
 
 # Fragen die Sie im Review Report aufgreifen und beantworten sollten
 
-**Fragen für die Zusammenfassung:**
+**Zusammenfassung:**
 
 - Was ist die Hauptaussage der Projektarbeit? Was lernen Sie aus der vorliegenden Projektarbeit? 
 
-**Fragen für die positiven Aspekte:**
+**Positive Aspekte:**
 
-- Was sind die größten Pluspunkte der Projektarbeit, was war besonders gut?
-- Welcher Abschnitt war für Sie besonders interessant und warum?
+- Welche drei Punkte sind besonders gut gelungen?
 
-**Fragen für die Kritik:**
+Stützen Sie sich in ihrem Text auf folgende Elemente:
 
-- Sind die Schaubilder schön gestaltet (Legende, Überschrift, Visualisierung insgesamt, ...) und die Tabellen gut dargestellt (Nachkommastellen, Beschriftung ...)
-- Ist die Interpretation der Schaubilder nachvollziehbar? Was fehlt ihnen?
-- Sind die Interpretationen der Schaubilder und Ergebnisse nachvollziehbar? Nennen Sie zwei Stellen an denen diese konkret verbessert werden können!
-- Welcher Abschnitt war für Sie verwirrend an der Projektarbeit und wie könnte dieser Abschnitt klarer formuliert werden/die Grafik besser gemacht werden?
-- Welche drei Punkte sollten die Autoren noch verbessern um ihren Projektarbeit aufzuwerten?
+- Qualität Schaubilder (Legende, Überschrift, Visualisierung insgesamt, …) und Tabellen (Nachkommastellen, Beschriftung, …)
+- Interpretation der Schaubilder und Tabellen / Ergebnisse nachvollziehbar? 
+- Nennen Sie konkrete Stellen, um ihre Argumente zu unterstützen 
+- Gehen Sie auf Struktur, Klarheit und Verständlichkeit ein
+
+**Potential für Verbesserungen:**
+
+- Welche drei Punkte sollten die Autoren noch verbessern, um ihren Projektarbeit aufzuwerten?
+
+Stützen Sie sich in ihrem Text auf folgende Elemente:
+
+- Qualität Schaubilder (Legende, Überschrift, Visualisierung insgesamt, …) und Tabellen (Nachkommastellen, Beschriftung, …)
+- Interpretation der Schaubilder und Tabellen / Ergebnisse nachvollziehbar? 
+- Nennen Sie konkrete Stellen, um ihre Argumente zu unterstützen 
+- Gehen Sie auf Struktur, Klarheit und Verständlichkeit ein
 
 **Fragen für Sie:**
 
