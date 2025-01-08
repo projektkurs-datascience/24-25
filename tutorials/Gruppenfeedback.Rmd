@@ -27,12 +27,7 @@ b) Wie spezifisch war der Report?
     - Wurden Kommentare angebracht, welche auf Probleme in ihren Antworten/Grafiken eingehen?
     - Wurden Probleme in ihrer Interpretation aufgedeckt und auf diese verwiesen?
  
-c) Wie reflektiert war der Report?
-  - Bewertung auf einer Skala von 1 bis 5 (1 = nicht reflektiert)
-  - Hinweise um dies bewerten zu können:
-    - Hat der Autor des Reports etwas aus ihrer Ausarbeitung gelernt?
-
-d) Wie ist ihr Gesamturteil zum erhalten Report im Verhältnis zu den anderen Reports (Ranking)?
+c) Wie ist ihr Gesamturteil zum erhalten Report im Verhältnis zu den anderen Reports (Ranking)?
   - Bewertung auf einer Skala von 1 bis 3 (1 = bester Report)
   - Hinweise um dies bewerten zu können:
     - Gegeben aller Review Reports die ihnen vorliegen: Welcher hat Ihnen am Meisten gebracht, welcher am wenigsten?
@@ -46,7 +41,6 @@ output: github_document
 params:
   hilfreich: 4
   spezifisch: 4
-  reflektiert: 3
   ranking: 2
 ---
 ```
