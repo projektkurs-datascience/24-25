@@ -10,8 +10,8 @@ output:
 
 # Bewertung des Review Reports durch die Gruppen
 
-- _Jede Gruppe_ erhält 3 Review Reports pro Projekt
-- Die Bewertung der Reports erfolgt von _jeder Gruppe_ auf der Basis folgender Kriterien:
+- _Jedes Mitglied einer Gruppe_ erhält 3 Review Reports pro Projekt
+- Die Bewertung der Reports erfolgt von _jedem Gruppenmitglied_ auf der Basis folgender Kriterien:
 
 a) Wie hilfreich war der Report?
   - Bewertung auf einer Skala von 1 bis 5 (1 = nicht hilfreich)
@@ -36,11 +36,16 @@ c) Wie ist ihr Gesamturteil zum erhalten Report im Verhältnis zu den anderen Re
 
 ```{r, eval=FALSE, warning=FALSE, message=FALSE}
 ---
-title: "Feedback Formular für Gruppen"
-output: github_document
-params:
-  hilfreich: 4
-  spezifisch: 4
-  ranking: 2
+title: "Feedback für Gruppe 1234"
+output: html_document
+Hilfreich_Peer12: 4
+Spezifisch_Peer12: 3
+Ranking_Peer12: 2
+Hilfreich_Peer25: 1
+Spezifisch_Peer25: 1
+Ranking_Peer25: 3
+Hilfreich_Peer6: 5
+Spezifisch_Peer6: 3
+Ranking_Peer6: 1
 ---
 ```
