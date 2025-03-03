@@ -138,6 +138,27 @@ knitr::include_url("slides/Visualisierung-Guidelines.html")
 knitr::include_url("slides/correlation.html")
 ```
 
+### 14: Advanced R Markdown
+
+```{r}
+knitr::include_url("slides/Advanced_RMarkdown.html")
+```
+
+- Hervorragende Einführungen und Übersichten zu R Markdown bietet Allison Hill an. [Hier](https://apreshill.github.io/rmd4cdc/#1) und [hier](https://rstudio-education.github.io/teaching-in-production/slides/index.html#1) finden Sie zwei sehr gute Präsentationen.
+
+- Für die Erstellung von Präsentation in RMarkdown mittels dem Paket xaringan [hier eine sehr gute Einführung](https://spcanelon.github.io/xaringan-basics-and-beyond/index.html).
+
+- Wenn Sie eine Abschlussarbeit mit RMarkdown verfassen möchten dann würde ich ihnen [diesen Vortrag](https://resulumit.com/teaching/rmd_workshop.html#1) von Herr Resul Umit empfehlen.
+
+### 15: Stichprobe vs. Grundgesamtheit
+
+```{r}
+knitr::include_url("slides/sample-vs-population.html")
+```
+
+- Eine hervorragende Einführung finden Sie im Buch [ModernDive (Kapitel 7)](https://moderndive.com/7-sampling.html)
+- Eine etwas tiefgreifendere Einführung finden Sie in dem Buch [Learning Statistics with R (Kapitel 10)](https://learningstatisticswithr.com/lsr-0.6.pdf)
+
 
 ## Vorlesungsfolien der Live-Veranstaltungen {.tabset}
 

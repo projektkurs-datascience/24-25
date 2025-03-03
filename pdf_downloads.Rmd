@@ -20,6 +20,8 @@ Hier finden Sie Folien als PDFs zum Download:
 - [Einführung in ggplot](slides/visualisierung_mit_ggplot2.pdf)
 - [Guidelines für die Visualisierung](slides/visualisierung-guidelines.pdf)
 - [Korrelation](slides/correlation.pdf)
+- [Advanced R Markdown](slides/advanced_rmarkdown.pdf)
+- [Stichprobe vs. Grundgesamtheit](slides/sample-vs-population.pdf)
 
 # Vorlesungen
 
