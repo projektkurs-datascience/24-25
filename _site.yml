@@ -17,11 +17,17 @@ navbar:
   - text: RTutor-Problem-Sets
     menu:
       - text: "Problem Set 1"
-        href: https://github.com/projektkurs-datascience/23-24/tree/main/problem-sets/ps1
+        href: https://github.com/projektkurs-datascience/24-25/tree/main/problem-sets/ps1
       - text: "Problem Set 2"
-        href: https://github.com/projektkurs-datascience/23-24/tree/main/problem-sets/ps2
+        href: https://github.com/projektkurs-datascience/24-25/tree/main/problem-sets/ps2
       - text: "Problem Set 3"
-        href: https://github.com/projektkurs-datascience/23-24/tree/main/problem-sets/ps3
+        href: https://github.com/projektkurs-datascience/24-25/tree/main/problem-sets/ps3
+      - text: "Problem Set 4"
+        href: https://github.com/projektkurs-datascience/24-25/tree/main/problem-sets/ps4
+      - text: "Problem Set 5"
+        href: https://github.com/projektkurs-datascience/24-25/tree/main/problem-sets/ps5
+      - text: "Problem Set 6"
+        href: https://github.com/projektkurs-datascience/24-25/tree/main/problem-sets/ps6
   - text: Tutorials
     icon: fa-users
     menu:
@@ -47,6 +53,8 @@ navbar:
         href: https://rstudio.com/resources/cheatsheets/
   - text: Moodle WiSe
     href: https://moodle.uni-ulm.de/course/view.php?id=55215
+  - text: Moodle SoSe
+    href: https://moodle.uni-ulm.de/course/view.php?id=64312
   right:
   - icon: fa-github fa-lg
     href: https://github.com/projektkurs-datascience/24-25
