@@ -22,7 +22,7 @@ The topics include the following:
 - Problem Set 1: Basic introduction to R and a short introduction to ggplot as well as a small introduction to data frames. [Here is the link to the Posit Cloud to test this problem set](https://posit.cloud/content/1857656)
 - Problem Set 2: Basic introduction how to get data into R, join different datasets and manipulate datasets. Here we introduce the basic dyplr syntax. [Here is the link to the Posit Cloud to test this problem set](https://posit.cloud/content/1067683)
 - Problem Set 3: Introduction to ggplot and how to make plots effective and visually appealing. Animated graphs as well as maps are also included in this section. [Here is the link to the Posit Cloud to test this problem set](https://posit.cloud/content/1067712)
-- Problem Set 4: Introduction to linear regression, standard errors, confidence intervals and the interpretation of coefficients. [Here is the link to the Posit Cloud to test this problem set]()
+- Problem Set 4: Introduction to linear regression, standard errors, confidence intervals and the interpretation of coefficients. [Here is the link to the Posit Cloud to test this problem set](https://posit.cloud/content/10276312)
 - Problem Set 5: Introduction to causality with monte-carlo simulations and real world data. [Here is the link to the Posit Cloud to test this problem set]()
 - Problem Set 6: Extend on the notion of causality using an experiment and instrumental variable regression to show students when it is possible to interpret coefficients causally. [Here is the link to the Posit Cloud to test this problem set]()
 
