@@ -339,7 +339,7 @@ Durch den sogenannten p-Wert können Sie abschätzen, wie wahrscheinlich es ist 
 **Exakter p-Wert:**
 
 ``` r
-null_distribution %&gt;% 
+null_distribution |&gt; 
   get_p_value(obs_stat = obs_diff_prop, direction = "right")
 ```
 
@@ -365,9 +365,8 @@ Mit Hilfe dieses t-Tests können Sie untersuchen ob die Mittelwerte der beiden G
 
 
 ``` r
-experiment %&gt;%
-  mutate(dvd_f = ifelse(dvd == "kaufen", 1, 0)) %&gt;%
-  t.test(dvd_f ~ gruppe, data = .)
+experiment$dvd_f &lt;- ifelse(experiment$dvd == "kaufen", 1, 0)
+t.test(dvd_f ~ gruppe, data = experiment)
 ```
 
 ```
@@ -471,17 +470,6 @@ Die Konsequenzen eines Fehlers 1. Art sind meist größer als die eines Fehlers 
     - In dem Fall wollen Sie besonders vorsichtig sein die Nullhypothese zu verwerfen. D.h. Sie brauchen sehr starke Evidenz für `\(H_1\)` um `\(H_0\)` zu verwerfen
 - Wenn Sie eher darüber besorgt sind einen Fehler 2. Art zu machen, dann sollten Sie ein niedriges Signifikanzniveau wählen, z.B. `\(\alpha\)` = 0.10
     - Hier wollen Sie vorsichtig sein `\(H_0\)` _nicht_ zu verwerfen, wenn die Nullhypothese eigentlich falsch ist
-
-
-
-
-
-
-
-
-
-
-
     </textarea>
 <style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
 <script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>

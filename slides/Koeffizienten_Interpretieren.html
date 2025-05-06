@@ -30,13 +30,13 @@ Datensatz zum BIP pro Kopf (`bip`) und dem Kapitalstock pro Kopf (`k`) von 133 v
 .tiny[
 
 ``` r
-pwt &lt;- pwt %&gt;% mutate(dummy_k = ifelse(k&gt;mean(pwt$k),1,0),
+pwt &lt;- pwt |&gt; mutate(dummy_k = ifelse(k&gt;mean(pwt$k),1,0),
                       dummy_k1 = ifelse(k&lt;=quantile(pwt$k, probs = 0.25),1,0),
                       dummy_k2 = ifelse(k&gt;quantile(pwt$k, probs = c(0.25)) &amp; k&lt;=quantile(pwt$k, probs = c(0.5)),1,0),
                       dummy_k3 = ifelse(k&gt;quantile(pwt$k, probs = c(0.5)) &amp; k&lt;=quantile(pwt$k, probs = c(0.75)),1,0),
-                      dummy_k4 = ifelse(k&gt;quantile(pwt$k, probs = c(0.75)),1,0)) %&gt;%
+                      dummy_k4 = ifelse(k&gt;quantile(pwt$k, probs = c(0.75)),1,0)) |&gt;
   select(country, bip, k, dummy_k, dummy_k1, dummy_k2, dummy_k3, dummy_k4)
-skim(pwt) %&gt;% yank("numeric")
+skim(pwt) |&gt; yank("numeric")
 ```
 
 ```

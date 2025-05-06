@@ -66,7 +66,7 @@ dagify(
   X ~ Z,
   coords = list(x = c(X = 1, Y = 3, Z = 2),
                 y = c(X = 1, Y = 1, Z = 2))
-) %>% 
+) |> 
   ggplot(aes(x = x, y = y, xend = xend, yend = yend)) +
   geom_dag_edges() +
   geom_dag_point(color = "grey80", size = 17) +
@@ -87,7 +87,7 @@ dagify(
   Z ~ X,
   coords = list(x = c(X = 1, Y = 3, Z = 2),
                 y = c(X = 1, Y = 1, Z = 2))
-) %>% 
+) |> 
   ggplot(aes(x = x, y = y, xend = xend, yend = yend)) +
   geom_dag_edges() +
   geom_dag_point(color = "grey80", size = 17) +
@@ -109,7 +109,7 @@ dagify(
   Z ~ X,
   coords = list(x = c(X = 1, Y = 3, Z = 2),
                 y = c(X = 1, Y = 1, Z = 2))
-) %>% 
+) |> 
   ggplot(aes(x = x, y = y, xend = xend, yend = yend)) +
   geom_dag_edges() +
   geom_dag_point(color = "grey80", size = 17) +
@@ -132,7 +132,7 @@ dagify(
   X ~ Z,
   coords = list(x = c(X = 1, Y = 3, Z = 2),
                 y = c(X = 1, Y = 1, Z = 2))
-) %>% 
+) |> 
   ggplot(aes(x = x, y = y, xend = xend, yend = yend)) +
   geom_dag_edges() +
   geom_dag_point(color = "grey80", size = 17) +
@@ -162,7 +162,7 @@ dagify(
   X ~ Z,
   coords = list(x = c(X = 1, Y = 3, Z = 2),
                 y = c(X = 1, Y = 1, Z = 2))
-) %>% 
+) |> 
   ggplot(aes(x = x, y = y, xend = xend, yend = yend)) +
   geom_dag_edges() +
   geom_dag_point(color = "grey80", size = 17) +
@@ -202,9 +202,9 @@ dagify(
   outcome = "Y",
   labels = c("X" = "Spenden", "Y" = "Gewinnwahrscheinlichkeit",
              "Z" = "Qualität des/der Kandidaten/in")
-) %>% 
-  tidy_dagitty() %>% 
-  node_status() %>% 
+) |> 
+  tidy_dagitty() |> 
+  node_status() |> 
   ggplot(aes(x = x, y = y, xend = xend, yend = yend)) +
   geom_dag_edges() +
   geom_dag_point(aes(color = status), size = 15) +
@@ -247,9 +247,9 @@ dagify(
   outcome = "Y",
   labels = c("X" = "Spenden", "Y" = "Gewinnwahrscheinlichkeit",
              "Z" = "Qualität des/der Kandidaten/in")
-) %>% 
-  tidy_dagitty() %>% 
-  node_status() %>% 
+) |> 
+  tidy_dagitty() |> 
+  node_status() |> 
   ggplot(aes(x = x, y = y, xend = xend, yend = yend)) +
   geom_dag_edges() +
   geom_dag_point(aes(color = status), size = 15) +
@@ -298,7 +298,7 @@ dagify(
   Z ~ X,
   coords = list(x = c(X = 1, Y = 3, Z = 2),
                 y = c(X = 1, Y = 1, Z = 2))
-) %>% 
+) |> 
   ggplot(aes(x = x, y = y, xend = xend, yend = yend)) +
   geom_dag_edges() +
   geom_dag_point(color = "grey80", size = 17) +
@@ -326,7 +326,7 @@ dagify(
   Z ~ X,
   coords = list(x = c(X = 1, Y = 3, Z = 2),
                 y = c(X = 1, Y = 1, Z = 2))
-) %>% 
+) |> 
   ggplot(aes(x = x, y = y, xend = xend, yend = yend)) +
   geom_dag_edges() +
   geom_dag_point(color = "grey80", size = 17) +
@@ -359,7 +359,7 @@ dagify(
   Z ~ X,
   coords = list(x = c(X = 1, Y = 3, Z = 2),
                 y = c(X = 1, Y = 1, Z = 2))
-) %>% 
+) |> 
   ggplot(aes(x = x, y = y, xend = xend, yend = yend)) +
   geom_dag_edges() +
   geom_dag_point(color = "grey80", size = 17) +
@@ -395,9 +395,9 @@ dagify(
   outcome = "Y",
   labels = c("X" = "Größe", "Y" = "Punkte pro Spiel",
              "Z" = "Spielt in der NBA")
-) %>% 
-  tidy_dagitty() %>% 
-  node_status() %>% 
+) |> 
+  tidy_dagitty() |> 
+  node_status() |> 
   ggplot(aes(x = x, y = y, xend = xend, yend = yend)) +
   geom_dag_edges() +
   geom_dag_point(aes(color = status), size = 15) +
@@ -436,9 +436,9 @@ dagify(
   outcome = "Y",
   labels = c("X" = "Größe", "Y" = "Punkte pro Spiel",
              "Z" = "Spielt in der NBA")
-) %>% 
-  tidy_dagitty() %>% 
-  node_status() %>% 
+) |> 
+  tidy_dagitty() |> 
+  node_status() |> 
   ggplot(aes(x = x, y = y, xend = xend, yend = yend)) +
   geom_dag_edges() +
   geom_dag_point(aes(color = status), size = 15) +

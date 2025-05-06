@@ -112,7 +112,7 @@ dagify(
   X ~ Z,
   coords = list(x = c(X = 1, Y = 3, Z = 2),
                 y = c(X = 1, Y = 1, Z = 2))
-) %>% 
+) |> 
   ggplot(aes(x = x, y = y, xend = xend, yend = yend)) +
   geom_dag_edges() +
   geom_dag_point(color = "grey80", size = 14) +
@@ -215,9 +215,9 @@ dagify(
   Eink ~ B,
   exposure = "B",
   outcome = "Eink",
-  coords = edu_earn_coords) %>% 
-  tidy_dagitty() %>% 
-  node_status() %>% 
+  coords = edu_earn_coords) |> 
+  tidy_dagitty() |> 
+  node_status() |> 
   ggplot(aes(x = x, y = y, xend = xend, yend = yend)) +
   geom_dag_edges(start_cap = ggraph::circle(3, "lines"),
                  end_cap = ggraph::circle(3, "lines"),
@@ -315,9 +315,9 @@ dagify(
              "H" = "Hintergrund",
              "BE" = "Bildung der Eltern", "FamEink" = "Haushaltseinkommen",
              "Pflicht" = "Schulpflicht", "Netzwerk" = "Netzwerk"),
-  coords = edu_earn_coords) %>% 
-  tidy_dagitty() %>% 
-  node_status() %>% 
+  coords = edu_earn_coords) |> 
+  tidy_dagitty() |> 
+  node_status() |> 
   ggplot(aes(x = x, y = y, xend = xend, yend = yend)) +
   geom_dag_edges() +
   geom_dag_point(aes(color = status), size = 14) +
@@ -358,9 +358,9 @@ dagify(
              "H" = "Hintergrund",
              "BE" = "Bildung der Eltern", "FamEink" = "Haushaltseinkommen",
              "Pflicht" = "Schulpflicht", "Netzwerk" = "Netzwerk"),
-  coords = edu_earn_coords) %>% 
-  tidy_dagitty() %>% 
-  node_status() %>% 
+  coords = edu_earn_coords) |> 
+  tidy_dagitty() |> 
+  node_status() |> 
   ggplot(aes(x = x, y = y, xend = xend, yend = yend)) +
   geom_dag_edges() +
   geom_dag_point(aes(color = status), size = 14) +
@@ -401,9 +401,9 @@ dagify(
              "H" = "Hintergrund",
              "BE" = "Bildung der Eltern", "FamEink" = "Haushaltseinkommen",
              "Pflicht" = "Schulpflicht", "Netzwerk" = "Netzwerk"),
-  coords = edu_earn_coords) %>% 
-  tidy_dagitty() %>% 
-  node_status() %>% 
+  coords = edu_earn_coords) |> 
+  tidy_dagitty() |> 
+  node_status() |> 
   ggplot(aes(x = x, y = y, xend = xend, yend = yend)) +
   geom_dag_edges(aes(edge_linetype = ifelse( x == x[3] & y == y[7], "dashed", "solid")), show.legend = FALSE) +
   geom_dag_point(aes(color = status), size = 14) +
@@ -448,9 +448,9 @@ dagify(
              "H" = "Hintergrund",
              "BE" = "Bildung der Eltern", "FamEink" = "Haushaltseinkommen",
              "Pflicht" = "Schulpflicht", "Netzwerk" = "Netzwerk"),
-  coords = edu_earn_coords) %>% 
-  tidy_dagitty() %>% 
-  node_status() %>% 
+  coords = edu_earn_coords) |> 
+  tidy_dagitty() |> 
+  node_status() |> 
   ggplot(aes(x = x, y = y, xend = xend, yend = yend)) +
   geom_dag_edges(aes(edge_linetype = ifelse(  x == x[3] & y == y[7], "dashed", "solid")), show.legend = FALSE) +
   geom_dag_point(aes(color = status), size = 14) +
@@ -498,9 +498,9 @@ dagify(
              "H" = "Hintergrund",
              "BE" = "Bildung der Eltern", "FamEink" = "Haushaltseinkommen",
              "Pflicht" = "Schulpflicht", "Netzwerk" = "Netzwerk"),
-  coords = edu_earn_coords) %>% 
-  tidy_dagitty() %>% 
-  node_status() %>% 
+  coords = edu_earn_coords) |> 
+  tidy_dagitty() |> 
+  node_status() |> 
   ggplot(aes(x = x, y = y, xend = xend, yend = yend)) +
   geom_dag_edges(aes(edge_linetype = ifelse( x == x[3] & y == y[7], "dashed", "solid")), show.legend = FALSE) +
   geom_dag_point(aes(color = status), size = 14) +
@@ -527,7 +527,7 @@ dagify(
   X ~ Z,
   coords = list(x = c(X = 1, Y = 3, Z = 2),
                 y = c(X = 1, Y = 1, Z = 2))
-) %>% 
+) |> 
   ggplot(aes(x = x, y = y, xend = xend, yend = yend)) +
   geom_dag_edges() +
   geom_dag_point(color = "grey80", size = 17) +
@@ -548,7 +548,7 @@ dagify(
   Z ~ X,
   coords = list(x = c(X = 1, Y = 3, Z = 2),
                 y = c(X = 1, Y = 1, Z = 2))
-) %>% 
+) |> 
   ggplot(aes(x = x, y = y, xend = xend, yend = yend)) +
   geom_dag_edges() +
   geom_dag_point(color = "grey80", size = 17) +
@@ -570,7 +570,7 @@ dagify(
   Z ~ X,
   coords = list(x = c(X = 1, Y = 3, Z = 2),
                 y = c(X = 1, Y = 1, Z = 2))
-) %>% 
+) |> 
   ggplot(aes(x = x, y = y, xend = xend, yend = yend)) +
   geom_dag_edges() +
   geom_dag_point(color = "grey80", size = 17) +
@@ -594,7 +594,7 @@ dagify(
   X ~ Z,
   coords = list(x = c(X = 1, Y = 3, Z = 2),
                 y = c(X = 1, Y = 1, Z = 2))
-) %>% 
+) |> 
   ggplot(aes(x = x, y = y, xend = xend, yend = yend)) +
   geom_dag_edges() +
   geom_dag_point(color = "grey80", size = 17) +
@@ -624,7 +624,7 @@ dagify(
   X ~ Z,
   coords = list(x = c(X = 1, Y = 3, Z = 2),
                 y = c(X = 1, Y = 1, Z = 2))
-) %>% 
+) |> 
   ggplot(aes(x = x, y = y, xend = xend, yend = yend)) +
   geom_dag_edges() +
   geom_dag_point(color = "grey80", size = 17) +
@@ -664,9 +664,9 @@ dagify(
   outcome = "Y",
   labels = c("X" = "Spenden", "Y" = "Gewinnwahrscheinlichkeit",
              "Z" = "Qualität des/der Kandidaten/in")
-) %>% 
-  tidy_dagitty() %>% 
-  node_status() %>% 
+) |> 
+  tidy_dagitty() |> 
+  node_status() |> 
   ggplot(aes(x = x, y = y, xend = xend, yend = yend)) +
   geom_dag_edges() +
   geom_dag_point(aes(color = status), size = 15) +
@@ -709,9 +709,9 @@ dagify(
   outcome = "Y",
   labels = c("X" = "Bildung", "Y" = "Einkommen",
              "Z" = "Familieneinkommen")
-) %>% 
-  tidy_dagitty() %>% 
-  node_status() %>% 
+) |> 
+  tidy_dagitty() |> 
+  node_status() |> 
   ggplot(aes(x = x, y = y, xend = xend, yend = yend)) +
   geom_dag_edges() +
   geom_dag_point(aes(color = status), size = 15) +
@@ -754,9 +754,9 @@ dagify(
   outcome = "Y",
   labels = c("X" = "Bildung", "Y" = "Einkommen",
              "Z" = "Familieneinkommen")
-) %>% 
-  tidy_dagitty() %>% 
-  node_status() %>% 
+) |> 
+  tidy_dagitty() |> 
+  node_status() |> 
   ggplot(aes(x = x, y = y, xend = xend, yend = yend)) +
   geom_dag_edges() +
   geom_dag_point(aes(color = status), size = 15) +
@@ -826,9 +826,9 @@ dagify(
              "H" = "Hintergrund",
              "BE" = "Bildung der Eltern", "FamEink" = "Haushaltseinkommen",
              "Pflicht" = "Schulpflicht", "Netzwerk" = "Netzwerk"),
-  coords = edu_earn_coords) %>% 
-  tidy_dagitty() %>% 
-  node_status() %>% 
+  coords = edu_earn_coords) |> 
+  tidy_dagitty() |> 
+  node_status() |> 
   ggplot(aes(x = x, y = y, xend = xend, yend = yend)) +
   geom_dag_edges(aes(edge_linetype = ifelse( x == x[3] & y == y[7], "dashed", "solid")), show.legend = FALSE) +
   geom_dag_point(aes(color = status), size = 14) +
@@ -902,9 +902,9 @@ dagify(
              "H" = "Hintergrund",
              "BE" = "Bildung der Eltern", "FamEink" = "Haushaltseinkommen",
              "Pflicht" = "Schulpflicht", "Netzwerk" = "Netzwerk"),
-  coords = edu_earn_coords) %>% 
-  tidy_dagitty() %>% 
-  node_status() %>% 
+  coords = edu_earn_coords) |> 
+  tidy_dagitty() |> 
+  node_status() |> 
   ggplot(aes(x = x, y = y, xend = xend, yend = yend)) +
   geom_dag_edges(aes(edge_linetype = ifelse( x == x[3] & y == y[7], "dashed", "solid")), show.legend = FALSE) +
   geom_dag_point(aes(color = status), size = 14) +
@@ -927,7 +927,7 @@ dagify(
   Z ~ X,
   coords = list(x = c(X = 1, Y = 3, Z = 2),
                 y = c(X = 1, Y = 1, Z = 2))
-) %>% 
+) |> 
   ggplot(aes(x = x, y = y, xend = xend, yend = yend)) +
   geom_dag_edges() +
   geom_dag_point(color = "grey80", size = 17) +
@@ -955,7 +955,7 @@ dagify(
   Z ~ X,
   coords = list(x = c(X = 1, Y = 3, Z = 2),
                 y = c(X = 1, Y = 1, Z = 2))
-) %>% 
+) |> 
   ggplot(aes(x = x, y = y, xend = xend, yend = yend)) +
   geom_dag_edges() +
   geom_dag_point(color = "grey80", size = 17) +
@@ -1003,9 +1003,9 @@ dagify(
              "H" = "Hintergrund",
              "BE" = "Bildung der Eltern", "FamEink" = "Haushaltseinkommen",
              "Pflicht" = "Schulpflicht", "Netzwerk" = "Netzwerk"),
-  coords = edu_earn_coords) %>% 
-  tidy_dagitty() %>% 
-  node_status() %>% 
+  coords = edu_earn_coords) |> 
+  tidy_dagitty() |> 
+  node_status() |> 
   ggplot(aes(x = x, y = y, xend = xend, yend = yend)) +
   geom_dag_edges(aes(edge_linetype = ifelse( x == x[3] & y == y[7], "dashed", "solid")), show.legend = FALSE) +
   geom_dag_point(aes(color = status), size = 14) +
@@ -1029,7 +1029,7 @@ dagify(
   Z ~ X,
   coords = list(x = c(X = 1, Y = 3, Z = 2),
                 y = c(X = 1, Y = 1, Z = 2))
-) %>% 
+) |> 
   ggplot(aes(x = x, y = y, xend = xend, yend = yend)) +
   geom_dag_edges() +
   geom_dag_point(color = "grey80", size = 17) +
@@ -1059,7 +1059,7 @@ dagify(
   O ~ D + A,
   coords = list(x = c(D = 1, Y = 3, A = 4, F = 1, O = 4),
                 y = c(D = 1, Y = 1, A = 1, F = 2, O = 2))
-) %>% 
+) |> 
   ggplot(aes(x = x, y = y, xend = xend, yend = yend)) +
   geom_dag_edges(aes(edge_linetype = ifelse( x == x[1] & y == y[1], "dashed", "solid")), show.legend = FALSE) +
   geom_dag_point(color = "grey80", size = 17) +
@@ -1097,7 +1097,7 @@ dagify(
   O ~ D + A,
   coords = list(x = c(D = 1, Y = 3, A = 4, F = 1, O = 4),
                 y = c(D = 1, Y = 1, A = 1, F = 2, O = 2))
-) %>% 
+) |> 
   ggplot(aes(x = x, y = y, xend = xend, yend = yend)) +
   geom_dag_edges(aes(edge_linetype = ifelse( x == x[1] & y == y[1], "dashed", "solid")), show.legend = FALSE) +
   geom_dag_point(color = "grey80", size = 17) +
@@ -1135,7 +1135,7 @@ dagify(
   O ~ D + A,
   coords = list(x = c(D = 1, Y = 3, A = 4, F = 1, O = 4),
                 y = c(D = 1, Y = 1, A = 1, F = 2, O = 2))
-) %>% 
+) |> 
   ggplot(aes(x = x, y = y, xend = xend, yend = yend)) +
   geom_dag_edges(aes(edge_linetype = ifelse( x == x[1] & y == y[1], "dashed", "solid")), show.legend = FALSE) +
   geom_dag_point(color = "grey80", size = 17) +
@@ -1249,7 +1249,7 @@ dagify(
   X ~ Z,
   coords = list(x = c(X = 1, Y = 3, Z = 2),
                 y = c(X = 1, Y = 1, Z = 2))
-) %>% 
+) |> 
   ggplot(aes(x = x, y = y, xend = xend, yend = yend)) +
   geom_dag_edges() +
   geom_dag_point(color = "grey80", size = 17) +
@@ -1270,7 +1270,7 @@ dagify(
   Z ~ X,
   coords = list(x = c(X = 1, Y = 3, Z = 2),
                 y = c(X = 1, Y = 1, Z = 2))
-) %>% 
+) |> 
   ggplot(aes(x = x, y = y, xend = xend, yend = yend)) +
   geom_dag_edges() +
   geom_dag_point(color = "grey80", size = 17) +
@@ -1292,7 +1292,7 @@ dagify(
   Z ~ X,
   coords = list(x = c(X = 1, Y = 3, Z = 2),
                 y = c(X = 1, Y = 1, Z = 2))
-) %>% 
+) |> 
   ggplot(aes(x = x, y = y, xend = xend, yend = yend)) +
   geom_dag_edges() +
   geom_dag_point(color = "grey80", size = 17) +

@@ -222,18 +222,18 @@ Hat die Nennung des Offensichtlichen, d.h. das die $14.99 für andere Einkäufe 
 
 ```{r, echo = FALSE, results='asis'}
 experiment <- as.tibble(rep( c("treatment", "kontrolle"), times = c(75,75))) 
-experiment <- experiment %>% 
-  mutate(id = rownames(experiment)) %>%
-  rename(gruppe = value) %>%
-  group_by(gruppe) %>%
-  mutate( dvd = ifelse(gruppe == "treatment", rep(c("kaufen", "nicht kaufen"), times = c(41,34)), rep(c("kaufen", "nicht kaufen"), times = c(56,19)))) %>%
+experiment <- experiment |> 
+  mutate(id = rownames(experiment)) |>
+  rename(gruppe = value) |>
+  group_by(gruppe) |>
+  mutate( dvd = ifelse(gruppe == "treatment", rep(c("kaufen", "nicht kaufen"), times = c(41,34)), rep(c("kaufen", "nicht kaufen"), times = c(56,19)))) |>
   ungroup()
 
-dt <- experiment %>%
-  group_by(gruppe, dvd) %>%
+dt <- experiment |>
+  group_by(gruppe, dvd) |>
   summarise(length(id))
 
-table <- dt %>% pivot_wider(names_from = "dvd", values_from = "length(id)")
+table <- dt |> pivot_wider(names_from = "dvd", values_from = "length(id)")
 pander(table, style="rmarkdown")
 
 ```
@@ -350,10 +350,10 @@ library(infer)
 set.seed(2019)
 
 # Pick out 6 rows
-experiment_sample <- experiment %>%
-  mutate(shuffle_kauf = sample(dvd)) %>% 
-  select(-id) %>% 
-  mutate(lebenslauf = 1:n()) %>% 
+experiment_sample <- experiment |>
+  mutate(shuffle_kauf = sample(dvd)) |> 
+  select(-id) |> 
+  mutate(lebenslauf = 1:n()) |> 
   select(lebenslauf, everything())
 
 library(ggpubr)
@@ -398,14 +398,14 @@ Anhand dieser Verteilung (10000 Züge) können Sie abschätzen, wie wahrscheinli
 --
 
 ```{r, echo=FALSE, fig.height=3}
-null_distribution <- experiment %>% 
-  specify(formula = dvd ~ gruppe, success = "nicht kaufen") %>%
-  hypothesize(null = "independence") %>% 
-  generate(reps = 10000, type = "permute") %>% 
+null_distribution <- experiment |> 
+  specify(formula = dvd ~ gruppe, success = "nicht kaufen") |>
+  hypothesize(null = "independence") |> 
+  generate(reps = 10000, type = "permute") |> 
   calculate(stat = "diff in props", order = c("treatment", "kontrolle"))
 
-obs_diff_prop <- experiment %>% 
-  specify(dvd ~ gruppe, success = "nicht kaufen") %>% 
+obs_diff_prop <- experiment |> 
+  specify(dvd ~ gruppe, success = "nicht kaufen") |> 
   calculate(stat = "diff in props", order = c("treatment", "kontrolle"))
 
 visualize(null_distribution, binwidth = 0.1) + 
@@ -433,7 +433,7 @@ Durch den sogenannten p-Wert können Sie abschätzen, wie wahrscheinlich es ist 
 
 **Exakter p-Wert:**
 ```{r}
-null_distribution %>% 
+null_distribution |> 
   get_p_value(obs_stat = obs_diff_prop, direction = "right")
 ```
 
@@ -451,9 +451,8 @@ Anstatt die zuvor gezeigte Methode des Bootstrap finden Sie in vielen empirische
 Mit Hilfe dieses t-Tests können Sie untersuchen ob die Mittelwerte der beiden Gruppen signifikant voneinander unterschiedlich sind:
 
 ```{r}
-experiment %>%
-  mutate(dvd_f = ifelse(dvd == "kaufen", 1, 0)) %>%
-  t.test(dvd_f ~ gruppe, data = .)
+experiment$dvd_f <- ifelse(experiment$dvd == "kaufen", 1, 0)
+t.test(dvd_f ~ gruppe, data = experiment)
 ```
 
 ---
@@ -543,14 +542,3 @@ Die Konsequenzen eines Fehlers 1. Art sind meist größer als die eines Fehlers 
     - In dem Fall wollen Sie besonders vorsichtig sein die Nullhypothese zu verwerfen. D.h. Sie brauchen sehr starke Evidenz für $H_1$ um $H_0$ zu verwerfen
 - Wenn Sie eher darüber besorgt sind einen Fehler 2. Art zu machen, dann sollten Sie ein niedriges Signifikanzniveau wählen, z.B. $\alpha$ = 0.10
     - Hier wollen Sie vorsichtig sein $H_0$ _nicht_ zu verwerfen, wenn die Nullhypothese eigentlich falsch ist
-
-
-
-
-
-
-
-
-
-
-

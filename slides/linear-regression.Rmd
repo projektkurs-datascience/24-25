@@ -86,9 +86,9 @@ $$\begin{split}y &= \alpha + \beta x\\
 
 ```{r, echo=FALSE}
 evals <- read_csv("data/evals.csv")
-used_evals <- evals %>%
+used_evals <- evals |>
   mutate(ID = rownames(evals),
-         gender = as.factor(gender)) %>%
+         gender = as.factor(gender)) |>
   select(ID, score, bty_avg, gender, age)
 ```
 
@@ -112,7 +112,7 @@ alpha <- mu_y - beta*mu_x
 
 .small[
 ```{r, echo=FALSE, fig.height=3.5}
-used_evals %>% 
+used_evals |> 
   ggplot(aes(bty_avg, score)) + 
   geom_point(alpha = 0.5) +
   geom_abline(intercept = alpha, slope = beta, color="blue" ) +
@@ -128,7 +128,7 @@ used_evals %>%
 Zum selben Ergebnis gelangen wir mit der Regressionsgeraden berechnet nach der Methode der kleinsten Quadrate (in rot dazu):
 
 ```{r, echo=FALSE, fig.height=3.5}
-used_evals %>% 
+used_evals |> 
   ggplot(aes(bty_avg, score)) + 
   geom_point(alpha = 0.5) +
   geom_abline(intercept = alpha, slope = beta, color="blue" ) +
@@ -210,7 +210,7 @@ fit <- lm(score ~ bty_avg, data = used_evals)
 used_evals$predicted <- predict(fit)   
 used_evals$residuals <- residuals(fit)
 
-used_evals %>% 
+used_evals |> 
   ggplot(aes(bty_avg, score)) +
   geom_smooth(method = "lm", se = FALSE, color = "lightgrey") +
   geom_segment(aes(xend = bty_avg, yend = predicted), alpha = .2) +
@@ -329,7 +329,7 @@ In ggplot2 können wir diese Konfidenzintervalle um $\hat{Y}$ auch zeichnen (wir
 ## Schätzer sind Zufallsvariablen 
 
 ```{r, fig.width=10, fig.height=4}
-used_evals %>% ggplot(aes(bty_avg, score)) +
+used_evals |> ggplot(aes(bty_avg, score)) +
   geom_point() +
   geom_smooth(method = "lm")
 ```
@@ -342,9 +342,10 @@ used_evals %>% ggplot(aes(bty_avg, score)) +
 Durch die R Funktion `predict` können die vorhergesagten Werte unserer Schätzung durch `lm` für jeden Punkt ausgegeben werden.
 
 ```{r, fig.width=10, fig.height=4}
-used_evals %>% 
-  mutate(Y_hat = predict(lm(score ~ bty_avg, data = .))) %>%
-  ggplot(aes(bty_avg, Y_hat)) +
+model <- lm(score ~ bty_avg, data = used_evals)
+used_evals$Y_hat <- predict(model)
+
+ggplot(used_evals, aes(bty_avg, Y_hat)) +
   geom_line()
 ```
 
@@ -369,8 +370,8 @@ Die Funktion `tidy` gibt die Ergebnisse aus `lm` als Dataframe wieder:
 library(broom)
 library(janitor)
 schätzer <- lm(score ~ bty_avg, data = used_evals)
-tidy(schätzer) %>%
-  mutate_if(is.numeric, round, digits = 3) %>% 
+tidy(schätzer) |>
+  mutate_if(is.numeric, round, digits = 3) |> 
   clean_names()
 ```
 ]
@@ -383,8 +384,8 @@ Hier können wir auch andere Informationen wie Konfidenzintervalle ausgeben lass
 
 .small[
 ```{r}
-tidy(schätzer, conf.int = TRUE) %>%
-  mutate_if(is.numeric, round, digits = 3) %>% 
+tidy(schätzer, conf.int = TRUE) |>
+  mutate_if(is.numeric, round, digits = 3) |> 
   clean_names()
 ```
 ]
@@ -412,8 +413,8 @@ class: center, middle, inverse
 - Korrelationskoeffizient für Alter und Lehrevaluation 
 
 ```{r}
-used_evals %>% 
-  summarize(cor(score,age)) %>%
+used_evals |> 
+  summarize(cor(score,age)) |>
   pull()
 ```
 ---
@@ -421,7 +422,7 @@ used_evals %>%
 ## Explorative Grafiken
 
 ```{r, fig.height=3}
-used_evals %>%
+used_evals |>
   ggplot(aes(x = age, y = score, color = gender)) +
   geom_point() +
   labs(x = "Alter", y = "Lehrevaluationsergebnis", color = "Geschlecht") +
@@ -435,8 +436,8 @@ used_evals %>%
 
 ```{r}
 basismodell <- lm(score ~ age + gender, data = used_evals)
-tidy(basismodell) %>%
-  mutate_if(is.numeric, round, digits = 3) %>% 
+tidy(basismodell) |>
+  mutate_if(is.numeric, round, digits = 3) |> 
   clean_names()
 ```
 --
@@ -460,8 +461,8 @@ Unsere explorative Grafik deutet zwei unterschiedliche Kurveverläufe an. Durch 
 
 ```{r}
 interaktionsmodell <- lm(score ~ age * gender, data = used_evals)
-tidy(interaktionsmodell, conf.int = TRUE) %>%
-  mutate_if(is.numeric, round, digits = 3) %>% 
+tidy(interaktionsmodell, conf.int = TRUE) |>
+  mutate_if(is.numeric, round, digits = 3) |> 
   clean_names()
 ```
 
@@ -506,10 +507,10 @@ split1 <- lm(score ~ age, data = filter(used_evals, gender=="female"))
 split2 <- lm(score ~ age, data = filter(used_evals, gender=="male")) 
 
 #Alternativ
-used_evals %>%  
-  group_by(gender) %>%
-  do(tidy(lm(score ~ age, data = .), conf.int = TRUE)) %>%
-  mutate_if(is.numeric, round, digits = 3) %>% 
+used_evals |>  
+  group_by(gender) |>
+  do(tidy(lm(score ~ age, data = .), conf.int = TRUE)) |>
+  mutate_if(is.numeric, round, digits = 3) |> 
   clean_names()
 
 ```
@@ -525,10 +526,10 @@ split1 <- lm(score ~ age, data = filter(used_evals, gender=="female"))
 split2 <- lm(score ~ age, data = filter(used_evals, gender=="male")) 
 
 #Alternativ
-used_evals %>%  
-  group_by(gender) %>%
-  do(tidy(lm(score ~ age, data = .), conf.int = TRUE)) %>%
-  mutate_if(is.numeric, round, digits = 3) %>% 
+used_evals |>  
+  group_by(gender) |>
+  do(tidy(lm(score ~ age, data = .), conf.int = TRUE)) |>
+  mutate_if(is.numeric, round, digits = 3) |> 
   clean_names()
 
 ```
@@ -542,8 +543,8 @@ used_evals %>%
 Falls Sie mit den Werten aus der Regression weiterarbeiten möchten können Sie auch für unterschiedliche Gruppen einzelne Regressionen durchführen lassen. Hier hilft ihnen der `do`-Befehl aus dem `broom` Paket:
 
 ```{r}
-used_evals %>%  
-  group_by(gender) %>%
+used_evals |>  
+  group_by(gender) |>
   do(tidy(lm(score ~ age, data = .), conf.int = TRUE))
 ```
 
@@ -554,10 +555,10 @@ used_evals %>%
 Diesen Dataframe können wir anschließend nach den Regressionskoeffizienten von Interesse filtern und uns nur die Spalten ausgeben lassen, welche uns interessieren:
 
 ```{r}
-used_evals %>%  
-  group_by(gender) %>%
-  do(tidy(lm(score ~ age, data = .), conf.int = TRUE)) %>%
-  filter(term == "age") %>%
+used_evals |>  
+  group_by(gender) |>
+  do(tidy(lm(score ~ age, data = .), conf.int = TRUE)) |>
+  filter(term == "age") |>
   select(gender, estimate, conf.low, conf.high)
 ```
 

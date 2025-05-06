@@ -128,9 +128,9 @@ Bei einer Simulation sollten Sie _immer_ einen sogenannten "seed" setzen!
 Durch die `sample` Funktion können wir zufällig eine Kugel aus unserer eben beschriebenen Urne ziehen:
 
 ```{r}
-kugel <- rep( c("rot", "blau"), times = c(2,3))
-kugel
-sample(kugel, 1) # zufälliges Ziehen
+urne <- rep( c("rot", "blau"), times = c(2,3))
+urne
+sample(urne, 1) # zufälliges Ziehen
 ```
 
 Mit der Funktion `replicate` können wir diesen Vorgang n-mal wiederholen.
@@ -143,7 +143,7 @@ Wir ziehen im folgenden Beispiel $N =$ 10 000 mal zufällig aus der Urne:
 
 ```{r}
 N <- 10000
-ereignis <- replicate(N, sample(kugel, 1))
+ereignis <- replicate(N, sample(urne, 1))
 ```
 
 --
@@ -166,7 +166,7 @@ Wir können auch ohne die Funktion `replicate` unser Experiment mehrmals wiederh
 - Hierzu ergänzen wir das Argument `replace = TRUE` 
 
 ```{r}
-ereignis <- sample(kugel, N, replace = TRUE)
+ereignis <- sample(urne, N, replace = TRUE)
 prop.table(table(ereignis))
 ```
 
@@ -498,11 +498,11 @@ Numerische Variablen können in diskrete oder stetige Daten unterteilt werden.
 Gibt es mehrere Kategorien, wie z.B. bei der Anzahl der Geschwister im `wage2` Datensatz, dann kann ein einfaches Balkendiagramm die Verteilung darstellen:
 
 ```{r, echo=FALSE, fig.cap="Anteil mit x Geschwistern im Datensatz", fig.height=3.5}
-wage2 %>% 
-  group_by(sibs) %>%
-  summarize(n = n()) %>%
+wage2 |> 
+  group_by(sibs) |>
+  summarize(n = n()) |>
   mutate(Anteil = n/sum(n), 
-         sibs = reorder(sibs, Anteil)) %>%
+         sibs = reorder(sibs, Anteil)) |>
   ggplot(aes(x=sibs, y=Anteil, fill=sibs)) + 
   geom_bar(stat = "identity", show.legend = FALSE) + 
   xlab("")
@@ -528,7 +528,7 @@ $$ F(a) = \mbox{Pr}(x \leq a) $$
 Wir können die empirische Verteilungsfunktion für unsere IQ-Werte zeichnen:
 
 ```{r ecdf,fig.cap="Empirische Verteilungsfunktion für den IQ.", echo=FALSE, fig.height=4}
-wage2 %>% ggplot(aes(IQ)) + 
+wage2 |> ggplot(aes(IQ)) + 
   stat_ecdf() +
   ylab("F(a)") + xlab("a")
 ```
@@ -608,7 +608,7 @@ Beispiel: Anteil der Datenpunkte zwischen IQ 75 und 100.
 ```{r area-under-curve, echo=FALSE, fig.height=3.5}
 d <- with(wage2, density(IQ))
 tmp <- data.frame(IQ=d$x, density=d$y)
-tmp %>% ggplot(aes(IQ,density)) + geom_line() + ylab("Dichte") +
+tmp |> ggplot(aes(IQ,density)) + geom_line() + ylab("Dichte") +
   geom_area(aes(x=IQ,y=density), data = filter(tmp, between(IQ, 75, 100)), alpha=0.2, fill="green")
 ```
 
@@ -701,8 +701,8 @@ Wir können nun den Kerndichteschätzer der empirischen IQ-Verteilung gegenüber
   - Interpretation: Personen im Datensatz sind etwas intelligenter als der Durchschnitt
 
 ```{r, echo=FALSE, fig.height=3}
-norm_dist <- data.frame(x=seq(-4,4,len=50)*SD.e+average) %>% mutate(density=dnorm(x,100,15))
-wage2 %>% ggplot(aes(IQ)) +
+norm_dist <- data.frame(x=seq(-4,4,len=50)*SD.e+average) |> mutate(density=dnorm(x,100,15))
+wage2 |> ggplot(aes(IQ)) +
   geom_density(fill="green") + ylab("Dichte") +
   geom_line(aes(x, density),  data = norm_dist, lwd=1.5) 
 ```
@@ -855,12 +855,12 @@ Hier wollen wir wieder unser Urnenbeispiel heranziehen:
 ```{r}
 set.seed(123)
 urne <- as.tibble(rep( c("rot", "weiß"), times = c(760,1240)))
-urne <- urne %>% mutate(id = rownames(urne))
+urne <- urne |> mutate(id = rownames(urne))
 colnames(urne) <- c("farbe", "id")
 
 stichprobe <- sample_n(urne, 50)
 
-stichprobe %>% count(farbe)
+stichprobe |> count(farbe)
 ```
 
 ---
@@ -876,7 +876,7 @@ Wir betrachten hier Zufallsvariablen!
 
 ```{r}
 library(infer)
-stichprobe %>% 
+stichprobe |> 
   specify(formula = farbe ~ NULL, success = "rot")
 ```
 
@@ -885,8 +885,8 @@ stichprobe %>%
 ## Stichprobenvarianz
 
 ```{r}
-bootstrap <- stichprobe %>% 
-  specify(formula = farbe ~ NULL, success = "rot") %>% 
+bootstrap <- stichprobe |> 
+  specify(formula = farbe ~ NULL, success = "rot") |> 
   generate(reps = 48, type = "bootstrap")
 ```
 
@@ -940,9 +940,9 @@ Bootstrap bedeutet frei übersetzt "sich selbst an seinem Schopf aus dem Sumpf z
 ## Bootstrap Verteilung
 
 ```{r}
-bootstrap1 <- stichprobe %>% 
-  specify(formula = farbe ~ NULL, success = "rot") %>% 
-  generate(reps = 48, type = "bootstrap") %>% 
+bootstrap1 <- stichprobe |> 
+  specify(formula = farbe ~ NULL, success = "rot") |> 
+  generate(reps = 48, type = "bootstrap") |> 
   calculate(stat = "prop")
 ```
 
@@ -951,7 +951,7 @@ bootstrap1 <- stichprobe %>%
 --
 
 ```{r, echo=FALSE, fig.height=3}
-bootstrap1 %>%
+bootstrap1 |>
   ggplot(aes(x = stat)) +
   geom_histogram(binwidth = 0.02, farbe = "rot") +
   xlim(0.10, 0.60) +
@@ -971,15 +971,15 @@ bootstrap1 %>%
 --
 
 ```{r}
-bootstrap2 <- stichprobe %>% 
-  specify(formula = farbe ~ NULL, success = "rot") %>% 
-  generate(reps = 10000, type = "bootstrap") %>% 
+bootstrap2 <- stichprobe |> 
+  specify(formula = farbe ~ NULL, success = "rot") |> 
+  generate(reps = 10000, type = "bootstrap") |> 
   calculate(stat = "prop")
 ```
 
 
 ```{r, echo=FALSE, fig.height=3}
-bootstrap2 %>%
+bootstrap2 |>
   ggplot(aes(x = stat)) +
   geom_histogram(binwidth = 0.02, farbe = "rot") +
   xlim(0.10, 0.60) +
@@ -1057,15 +1057,15 @@ $$\sigma = \sqrt{\frac{1}{N} \sum_{i=1}^{N} (x_{i} - \mu)²}$$
 Wenn wir dieses Wissen auf unsere Stichprobe anwenden, dann können wir die Konfidenzintervalle entsprechend einzeichen ( $\mu$ = 0.38 ):
 
 ```{r, out.width='50%', eval=FALSE}
-conf <- stichprobe %>% 
-  specify(response = farbe, success = "rot") %>% 
-  generate(reps = 1000, type = "bootstrap") %>% 
+conf <- stichprobe |> 
+  specify(response = farbe, success = "rot") |> 
+  generate(reps = 1000, type = "bootstrap") |> 
   calculate(stat = "prop") 
 
-standard_error_ci <- conf %>%
+standard_error_ci <- conf |>
   get_confidence_interval(type = "se", point_estimate = 0.38)
 
-conf %>% visualize() + 
+conf |> visualize() + 
   shade_confidence_interval(endpoints = standard_error_ci) +
   geom_vline(xintercept = 0.38, linetype = "dashed")
 ```
@@ -1075,15 +1075,15 @@ conf %>% visualize() +
 ## KI auf Basis der Normalverteilung
 
 ```{r, echo=FALSE, out.width='45%'}
-conf <- stichprobe %>% 
-  specify(response = farbe, success = "rot") %>% 
-  generate(reps = 1000, type = "bootstrap") %>% 
+conf <- stichprobe |> 
+  specify(response = farbe, success = "rot") |> 
+  generate(reps = 1000, type = "bootstrap") |> 
   calculate(stat = "prop") 
 
-standard_error_ci <- conf %>%
+standard_error_ci <- conf |>
   get_confidence_interval(type = "se", point_estimate = 0.38)
 
-conf %>% visualize() + 
+conf |> visualize() + 
   shade_confidence_interval(endpoints = standard_error_ci) +
   geom_vline(xintercept = 0.38, linetype = "dashed")
 ```
@@ -1159,8 +1159,8 @@ Bitte beachten Sie folgendes:
 ## Das 95% Konfidenzintervall
 
 ```{r, echo=FALSE, fig.height=4}
-p_red <- urne %>% 
-  summarize(anteil_rot = mean(farbe == "rot")) %>% 
+p_red <- urne |> 
+  summarize(anteil_rot = mean(farbe == "rot")) |> 
   pull(anteil_rot)
 
 # Schaubild von hier: https://github.com/moderndive/ModernDive_book/blob/master/08-confidence-intervals.Rmd
@@ -1168,22 +1168,22 @@ if(!file.exists("data/balls_percentile_cis.rds")){
   set.seed(4)
   # Function to run infer pipeline
   bootstrap_pipeline <- function(sample_data){
-    sample_data %>% 
-      specify(formula = farbe ~ NULL, success = "rot") %>% 
-      generate(reps = 1000, type = "bootstrap") %>% 
+    sample_data |> 
+      specify(formula = farbe ~ NULL, success = "rot") |> 
+      generate(reps = 1000, type = "bootstrap") |> 
       calculate(stat = "prop")
   }
   
   # Compute nested data frame with sampled data, sample proportions, all 
   # bootstrap replicates, and percentile_ci
-  balls_percentile_cis <- urne %>% 
-    rep_sample_n(size = 50, reps = 100, replace = FALSE) %>% 
-    group_by(replicate) %>% 
-    nest() %>% 
-    mutate(sample_prop = map_dbl(data, ~mean(.x$farbe == "rot"))) %>%
+  balls_percentile_cis <- urne |> 
+    rep_sample_n(size = 50, reps = 100, replace = FALSE) |> 
+    group_by(replicate) |> 
+    nest() |> 
+    mutate(sample_prop = map_dbl(data, ~mean(.x$farbe == "rot"))) |>
     # run infer pipeline on each nested tibble to generated bootstrap replicates
-    mutate(bootstraps = map(data, bootstrap_pipeline)) %>% 
-    group_by(replicate) %>% 
+    mutate(bootstraps = map(data, bootstrap_pipeline)) |> 
+    group_by(replicate) |> 
     # Compute 95% percentile CI's for each nested element
     mutate(percentile_ci = map(bootstraps, get_ci, type = "percentile", level = 0.95))
   
@@ -1193,8 +1193,8 @@ if(!file.exists("data/balls_percentile_cis.rds")){
   balls_percentile_cis <- readRDS("data/balls_percentile_cis.rds")
 }
 # Identify if confidence interval captured true p
-percentile_cis <- balls_percentile_cis %>% 
-  unnest(percentile_ci) %>% 
+percentile_cis <- balls_percentile_cis |> 
+  unnest(percentile_ci) |> 
   mutate(captured = lower_ci <= p_red & p_red <= upper_ci)
     
 # Plot them!

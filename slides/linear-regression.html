@@ -302,7 +302,7 @@ In ggplot2 können wir diese Konfidenzintervalle um `\(\hat{Y}\)` auch zeichnen 
 
 
 ``` r
-used_evals %&gt;% ggplot(aes(bty_avg, score)) +
+used_evals |&gt; ggplot(aes(bty_avg, score)) +
   geom_point() +
   geom_smooth(method = "lm")
 ```
@@ -318,9 +318,10 @@ Durch die R Funktion `predict` können die vorhergesagten Werte unserer Schätzu
 
 
 ``` r
-used_evals %&gt;% 
-  mutate(Y_hat = predict(lm(score ~ bty_avg, data = .))) %&gt;%
-  ggplot(aes(bty_avg, Y_hat)) +
+model &lt;- lm(score ~ bty_avg, data = used_evals)
+used_evals$Y_hat &lt;- predict(model)
+
+ggplot(used_evals, aes(bty_avg, Y_hat)) +
   geom_line()
 ```
 
@@ -348,8 +349,8 @@ Die Funktion `tidy` gibt die Ergebnisse aus `lm` als Dataframe wieder:
 library(broom)
 library(janitor)
 schätzer &lt;- lm(score ~ bty_avg, data = used_evals)
-tidy(schätzer) %&gt;%
-  mutate_if(is.numeric, round, digits = 3) %&gt;% 
+tidy(schätzer) |&gt;
+  mutate_if(is.numeric, round, digits = 3) |&gt; 
   clean_names()
 ```
 
@@ -371,8 +372,8 @@ Hier können wir auch andere Informationen wie Konfidenzintervalle ausgeben lass
 .small[
 
 ``` r
-tidy(schätzer, conf.int = TRUE) %&gt;%
-  mutate_if(is.numeric, round, digits = 3) %&gt;% 
+tidy(schätzer, conf.int = TRUE) |&gt;
+  mutate_if(is.numeric, round, digits = 3) |&gt; 
   clean_names()
 ```
 
@@ -409,8 +410,8 @@ class: center, middle, inverse
 
 
 ``` r
-used_evals %&gt;% 
-  summarize(cor(score,age)) %&gt;%
+used_evals |&gt; 
+  summarize(cor(score,age)) |&gt;
   pull()
 ```
 
@@ -423,7 +424,7 @@ used_evals %&gt;%
 
 
 ``` r
-used_evals %&gt;%
+used_evals |&gt;
   ggplot(aes(x = age, y = score, color = gender)) +
   geom_point() +
   labs(x = "Alter", y = "Lehrevaluationsergebnis", color = "Geschlecht") +
@@ -440,8 +441,8 @@ used_evals %&gt;%
 
 ``` r
 basismodell &lt;- lm(score ~ age + gender, data = used_evals)
-tidy(basismodell) %&gt;%
-  mutate_if(is.numeric, round, digits = 3) %&gt;% 
+tidy(basismodell) |&gt;
+  mutate_if(is.numeric, round, digits = 3) |&gt; 
   clean_names()
 ```
 
@@ -475,8 +476,8 @@ Unsere explorative Grafik deutet zwei unterschiedliche Kurveverläufe an. Durch 
 
 ``` r
 interaktionsmodell &lt;- lm(score ~ age * gender, data = used_evals)
-tidy(interaktionsmodell, conf.int = TRUE) %&gt;%
-  mutate_if(is.numeric, round, digits = 3) %&gt;% 
+tidy(interaktionsmodell, conf.int = TRUE) |&gt;
+  mutate_if(is.numeric, round, digits = 3) |&gt; 
   clean_names()
 ```
 
@@ -532,10 +533,10 @@ split1 &lt;- lm(score ~ age, data = filter(used_evals, gender=="female"))
 split2 &lt;- lm(score ~ age, data = filter(used_evals, gender=="male")) 
 
 #Alternativ
-used_evals %&gt;%  
-  group_by(gender) %&gt;%
-  do(tidy(lm(score ~ age, data = .), conf.int = TRUE)) %&gt;%
-  mutate_if(is.numeric, round, digits = 3) %&gt;% 
+used_evals |&gt;  
+  group_by(gender) |&gt;
+  do(tidy(lm(score ~ age, data = .), conf.int = TRUE)) |&gt;
+  mutate_if(is.numeric, round, digits = 3) |&gt; 
   clean_names()
 ```
 
@@ -567,8 +568,8 @@ Falls Sie mit den Werten aus der Regression weiterarbeiten möchten können Sie 
 
 
 ``` r
-used_evals %&gt;%  
-  group_by(gender) %&gt;%
+used_evals |&gt;  
+  group_by(gender) |&gt;
   do(tidy(lm(score ~ age, data = .), conf.int = TRUE))
 ```
 
@@ -591,10 +592,10 @@ Diesen Dataframe können wir anschließend nach den Regressionskoeffizienten von
 
 
 ``` r
-used_evals %&gt;%  
-  group_by(gender) %&gt;%
-  do(tidy(lm(score ~ age, data = .), conf.int = TRUE)) %&gt;%
-  filter(term == "age") %&gt;%
+used_evals |&gt;  
+  group_by(gender) |&gt;
+  do(tidy(lm(score ~ age, data = .), conf.int = TRUE)) |&gt;
+  filter(term == "age") |&gt;
   select(gender, estimate, conf.low, conf.high)
 ```
 
