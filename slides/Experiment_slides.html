@@ -559,7 +559,7 @@ thp %&gt;%
           Signifikanz = round(p.value,2)) %&gt;%
   select( Mean_Treatment, Mean_Kontrolle, Differenz, Signifikanz) -&gt; total
 
-*rownames(total) &lt;- c("Alter der Mutter", "Depressiv (1 Jahr)", "Bildung des Vaters", "Vater beschäftigt", "Mutter beschäftigt", "Erstes Kind", "Anzahl der Kinder", "Oma im Haus", "Stiefoma im Haus")
+*total$name &lt;- c("Stiefoma im Haus", "Alter der Mutter", "Depressiv (1 Jahr)", "Bildung des Vaters", "Vater beschäftigt", "Mutter beschäftigt", "Erstes Kind", "Anzahl der Kinder", "Oma im Haus")
 ```
 ]
  
@@ -587,7 +587,7 @@ thp %&gt;%
           Signifikanz = round(p.value,2)) %&gt;%
   select( Mean_Treatment, Mean_Kontrolle, Differenz, Signifikanz) -&gt; total
 
-rownames(total) &lt;- c("Alter der Mutter", "Depressiv (1 Jahr)", "Bildung des Vaters", "Vater beschäftigt", "Mutter beschäftigt", "Erstes Kind", "Anzahl der Kinder", "Oma im Haus", "Stiefoma im Haus")
+total$name &lt;- c("Stiefoma im Haus", "Alter der Mutter", "Depressiv (1 Jahr)", "Bildung des Vaters", "Vater beschäftigt", "Mutter beschäftigt", "Erstes Kind", "Anzahl der Kinder", "Oma im Haus")
 
 *total
 ```
@@ -596,18 +596,18 @@ rownames(total) &lt;- c("Alter der Mutter", "Depressiv (1 Jahr)", "Bildung des V
 .panel2-balancing-auto[
 
 ```
-# A tibble: 9 × 4
-  Mean_Treatment Mean_Kontrolle Differenz Signifikanz
-*          &lt;dbl&gt;          &lt;dbl&gt;     &lt;dbl&gt;       &lt;dbl&gt;
-1           0.47           0.4       0.06        0.05
-2          26.5           27        -0.51        0.14
-3           0.27           0.59     -0.32        0   
-4           6.95           7.09     -0.13        0.61
-5           0.9            0.91     -0.01        0.53
-6           0.02           0.03     -0.01        0.26
-7           0.19           0.19      0.01        0.82
-8           2.16           2.33     -0.17        0.15
-9           0.08           0.05      0.03        0.07
+# A tibble: 9 × 5
+  Mean_Treatment Mean_Kontrolle Differenz Signifikanz name              
+           &lt;dbl&gt;          &lt;dbl&gt;     &lt;dbl&gt;       &lt;dbl&gt; &lt;chr&gt;             
+1           0.47           0.4       0.06        0.05 Stiefoma im Haus  
+2          26.5           27        -0.51        0.14 Alter der Mutter  
+3           0.27           0.59     -0.32        0    Depressiv (1 Jahr)
+4           6.95           7.09     -0.13        0.61 Bildung des Vaters
+5           0.9            0.91     -0.01        0.53 Vater beschäftigt 
+6           0.02           0.03     -0.01        0.26 Mutter beschäftigt
+7           0.19           0.19      0.01        0.82 Erstes Kind       
+8           2.16           2.33     -0.17        0.15 Anzahl der Kinder 
+9           0.08           0.05      0.03        0.07 Oma im Haus       
 ```
 ]
 
@@ -631,10 +631,56 @@ thp %&gt;%
           Signifikanz = round(p.value,2)) %&gt;%
   select( Mean_Treatment, Mean_Kontrolle, Differenz, Signifikanz) -&gt; total
 
-rownames(total) &lt;- c("Alter der Mutter", "Depressiv (1 Jahr)", "Bildung des Vaters", "Vater beschäftigt", "Mutter beschäftigt", "Erstes Kind", "Anzahl der Kinder", "Oma im Haus", "Stiefoma im Haus")
+total$name &lt;- c("Stiefoma im Haus", "Alter der Mutter", "Depressiv (1 Jahr)", "Bildung des Vaters", "Vater beschäftigt", "Mutter beschäftigt", "Erstes Kind", "Anzahl der Kinder", "Oma im Haus")
 
 total %&gt;%
-* kbl(col.names = c("Treatment", "Kontrolle","Differenz","p-Wert"), digits = 2, format = "html",
+* select(name, everything())
+```
+]
+ 
+.panel2-balancing-auto[
+
+```
+# A tibble: 9 × 5
+  name               Mean_Treatment Mean_Kontrolle Differenz Signifikanz
+  &lt;chr&gt;                       &lt;dbl&gt;          &lt;dbl&gt;     &lt;dbl&gt;       &lt;dbl&gt;
+1 Stiefoma im Haus             0.47           0.4       0.06        0.05
+2 Alter der Mutter            26.5           27        -0.51        0.14
+3 Depressiv (1 Jahr)           0.27           0.59     -0.32        0   
+4 Bildung des Vaters           6.95           7.09     -0.13        0.61
+5 Vater beschäftigt            0.9            0.91     -0.01        0.53
+6 Mutter beschäftigt           0.02           0.03     -0.01        0.26
+7 Erstes Kind                  0.19           0.19      0.01        0.82
+8 Anzahl der Kinder            2.16           2.33     -0.17        0.15
+9 Oma im Haus                  0.08           0.05      0.03        0.07
+```
+]
+
+---
+count: false
+ 
+
+.panel1-balancing-auto[
+
+``` r
+thp %&gt;%
+  filter(THP_sample==1) %&gt;%
+  select( treat, depressed_1y, age_baseline, kids_no, first_child, employed_mo_baseline, MIL, maternalgma, edu_fa_baseline, employed_fa_baseline) %&gt;%
+  pivot_longer(cols = -treat, names_to = "variable", values_to = "value") %&gt;%
+  group_nest(variable) %&gt;%
+  mutate(t.test = map(data, ~tidy(t.test(value ~ treat, data = .x)))) %&gt;%
+  unnest(t.test) %&gt;%
+  mutate( Mean_Treatment = round(estimate2, 2),
+          Mean_Kontrolle = round(estimate1, 2),
+    Differenz = -round(estimate, 2),
+          Signifikanz = round(p.value,2)) %&gt;%
+  select( Mean_Treatment, Mean_Kontrolle, Differenz, Signifikanz) -&gt; total
+
+total$name &lt;- c("Stiefoma im Haus", "Alter der Mutter", "Depressiv (1 Jahr)", "Bildung des Vaters", "Vater beschäftigt", "Mutter beschäftigt", "Erstes Kind", "Anzahl der Kinder", "Oma im Haus")
+
+total %&gt;%
+  select(name, everything()) %&gt;%
+* kbl(col.names = c(" ", "Treatment", "Kontrolle","Differenz","p-Wert"), digits = 2, format = "html",
 *     caption = "Balancing Tabelle für die Grundcharakteristika")
 ```
 ]
@@ -644,6 +690,7 @@ total %&gt;%
 &lt;caption&gt;Balancing Tabelle für die Grundcharakteristika&lt;/caption&gt;
  &lt;thead&gt;
   &lt;tr&gt;
+   &lt;th style="text-align:left;"&gt;   &lt;/th&gt;
    &lt;th style="text-align:right;"&gt; Treatment &lt;/th&gt;
    &lt;th style="text-align:right;"&gt; Kontrolle &lt;/th&gt;
    &lt;th style="text-align:right;"&gt; Differenz &lt;/th&gt;
@@ -652,54 +699,63 @@ total %&gt;%
  &lt;/thead&gt;
 &lt;tbody&gt;
   &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Stiefoma im Haus &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 0.47 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 0.40 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 0.06 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 0.05 &lt;/td&gt;
   &lt;/tr&gt;
   &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Alter der Mutter &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 26.49 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 27.00 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; -0.51 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 0.14 &lt;/td&gt;
   &lt;/tr&gt;
   &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Depressiv (1 Jahr) &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 0.27 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 0.59 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; -0.32 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 0.00 &lt;/td&gt;
   &lt;/tr&gt;
   &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bildung des Vaters &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 6.95 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 7.09 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; -0.13 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 0.61 &lt;/td&gt;
   &lt;/tr&gt;
   &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Vater beschäftigt &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 0.90 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 0.91 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; -0.01 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 0.53 &lt;/td&gt;
   &lt;/tr&gt;
   &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Mutter beschäftigt &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 0.02 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 0.03 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; -0.01 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 0.26 &lt;/td&gt;
   &lt;/tr&gt;
   &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Erstes Kind &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 0.19 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 0.19 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 0.01 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 0.82 &lt;/td&gt;
   &lt;/tr&gt;
   &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Anzahl der Kinder &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 2.16 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 2.33 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; -0.17 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 0.15 &lt;/td&gt;
   &lt;/tr&gt;
   &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Oma im Haus &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 0.08 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 0.05 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 0.03 &lt;/td&gt;
@@ -729,10 +785,11 @@ thp %&gt;%
           Signifikanz = round(p.value,2)) %&gt;%
   select( Mean_Treatment, Mean_Kontrolle, Differenz, Signifikanz) -&gt; total
 
-rownames(total) &lt;- c("Alter der Mutter", "Depressiv (1 Jahr)", "Bildung des Vaters", "Vater beschäftigt", "Mutter beschäftigt", "Erstes Kind", "Anzahl der Kinder", "Oma im Haus", "Stiefoma im Haus")
+total$name &lt;- c("Stiefoma im Haus", "Alter der Mutter", "Depressiv (1 Jahr)", "Bildung des Vaters", "Vater beschäftigt", "Mutter beschäftigt", "Erstes Kind", "Anzahl der Kinder", "Oma im Haus")
 
 total %&gt;%
-  kbl(col.names = c("Treatment", "Kontrolle","Differenz","p-Wert"), digits = 2, format = "html",
+  select(name, everything()) %&gt;%
+  kbl(col.names = c(" ", "Treatment", "Kontrolle","Differenz","p-Wert"), digits = 2, format = "html",
       caption = "Balancing Tabelle für die Grundcharakteristika") %&gt;%
 * kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"))
 ```
@@ -743,6 +800,7 @@ total %&gt;%
 &lt;caption&gt;Balancing Tabelle für die Grundcharakteristika&lt;/caption&gt;
  &lt;thead&gt;
   &lt;tr&gt;
+   &lt;th style="text-align:left;"&gt;   &lt;/th&gt;
    &lt;th style="text-align:right;"&gt; Treatment &lt;/th&gt;
    &lt;th style="text-align:right;"&gt; Kontrolle &lt;/th&gt;
    &lt;th style="text-align:right;"&gt; Differenz &lt;/th&gt;
@@ -751,54 +809,63 @@ total %&gt;%
  &lt;/thead&gt;
 &lt;tbody&gt;
   &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Stiefoma im Haus &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 0.47 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 0.40 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 0.06 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 0.05 &lt;/td&gt;
   &lt;/tr&gt;
   &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Alter der Mutter &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 26.49 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 27.00 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; -0.51 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 0.14 &lt;/td&gt;
   &lt;/tr&gt;
   &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Depressiv (1 Jahr) &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 0.27 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 0.59 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; -0.32 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 0.00 &lt;/td&gt;
   &lt;/tr&gt;
   &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bildung des Vaters &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 6.95 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 7.09 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; -0.13 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 0.61 &lt;/td&gt;
   &lt;/tr&gt;
   &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Vater beschäftigt &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 0.90 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 0.91 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; -0.01 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 0.53 &lt;/td&gt;
   &lt;/tr&gt;
   &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Mutter beschäftigt &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 0.02 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 0.03 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; -0.01 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 0.26 &lt;/td&gt;
   &lt;/tr&gt;
   &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Erstes Kind &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 0.19 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 0.19 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 0.01 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 0.82 &lt;/td&gt;
   &lt;/tr&gt;
   &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Anzahl der Kinder &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 2.16 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 2.33 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; -0.17 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 0.15 &lt;/td&gt;
   &lt;/tr&gt;
   &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Oma im Haus &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 0.08 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 0.05 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 0.03 &lt;/td&gt;
@@ -828,10 +895,11 @@ thp %&gt;%
           Signifikanz = round(p.value,2)) %&gt;%
   select( Mean_Treatment, Mean_Kontrolle, Differenz, Signifikanz) -&gt; total
 
-rownames(total) &lt;- c("Alter der Mutter", "Depressiv (1 Jahr)", "Bildung des Vaters", "Vater beschäftigt", "Mutter beschäftigt", "Erstes Kind", "Anzahl der Kinder", "Oma im Haus", "Stiefoma im Haus")
+total$name &lt;- c("Stiefoma im Haus", "Alter der Mutter", "Depressiv (1 Jahr)", "Bildung des Vaters", "Vater beschäftigt", "Mutter beschäftigt", "Erstes Kind", "Anzahl der Kinder", "Oma im Haus")
 
 total %&gt;%
-  kbl(col.names = c("Treatment", "Kontrolle","Differenz","p-Wert"), digits = 2, format = "html",
+  select(name, everything()) %&gt;%
+  kbl(col.names = c(" ", "Treatment", "Kontrolle","Differenz","p-Wert"), digits = 2, format = "html",
       caption = "Balancing Tabelle für die Grundcharakteristika") %&gt;%
   kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive")) %&gt;%
 * kable_paper(full_width = F)
@@ -843,6 +911,7 @@ total %&gt;%
 &lt;caption&gt;Balancing Tabelle für die Grundcharakteristika&lt;/caption&gt;
  &lt;thead&gt;
   &lt;tr&gt;
+   &lt;th style="text-align:left;"&gt;   &lt;/th&gt;
    &lt;th style="text-align:right;"&gt; Treatment &lt;/th&gt;
    &lt;th style="text-align:right;"&gt; Kontrolle &lt;/th&gt;
    &lt;th style="text-align:right;"&gt; Differenz &lt;/th&gt;
@@ -851,54 +920,63 @@ total %&gt;%
  &lt;/thead&gt;
 &lt;tbody&gt;
   &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Stiefoma im Haus &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 0.47 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 0.40 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 0.06 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 0.05 &lt;/td&gt;
   &lt;/tr&gt;
   &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Alter der Mutter &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 26.49 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 27.00 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; -0.51 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 0.14 &lt;/td&gt;
   &lt;/tr&gt;
   &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Depressiv (1 Jahr) &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 0.27 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 0.59 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; -0.32 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 0.00 &lt;/td&gt;
   &lt;/tr&gt;
   &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bildung des Vaters &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 6.95 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 7.09 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; -0.13 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 0.61 &lt;/td&gt;
   &lt;/tr&gt;
   &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Vater beschäftigt &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 0.90 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 0.91 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; -0.01 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 0.53 &lt;/td&gt;
   &lt;/tr&gt;
   &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Mutter beschäftigt &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 0.02 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 0.03 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; -0.01 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 0.26 &lt;/td&gt;
   &lt;/tr&gt;
   &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Erstes Kind &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 0.19 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 0.19 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 0.01 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 0.82 &lt;/td&gt;
   &lt;/tr&gt;
   &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Anzahl der Kinder &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 2.16 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 2.33 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; -0.17 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 0.15 &lt;/td&gt;
   &lt;/tr&gt;
   &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Oma im Haus &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 0.08 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 0.05 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 0.03 &lt;/td&gt;
@@ -928,14 +1006,15 @@ thp %&gt;%
           Signifikanz = round(p.value,2)) %&gt;%
   select( Mean_Treatment, Mean_Kontrolle, Differenz, Signifikanz) -&gt; total
 
-rownames(total) &lt;- c("Alter der Mutter", "Depressiv (1 Jahr)", "Bildung des Vaters", "Vater beschäftigt", "Mutter beschäftigt", "Erstes Kind", "Anzahl der Kinder", "Oma im Haus", "Stiefoma im Haus")
+total$name &lt;- c("Stiefoma im Haus", "Alter der Mutter", "Depressiv (1 Jahr)", "Bildung des Vaters", "Vater beschäftigt", "Mutter beschäftigt", "Erstes Kind", "Anzahl der Kinder", "Oma im Haus")
 
 total %&gt;%
-  kbl(col.names = c("Treatment", "Kontrolle","Differenz","p-Wert"), digits = 2, format = "html",
+  select(name, everything()) %&gt;%
+  kbl(col.names = c(" ", "Treatment", "Kontrolle","Differenz","p-Wert"), digits = 2, format = "html",
       caption = "Balancing Tabelle für die Grundcharakteristika") %&gt;%
   kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive")) %&gt;%
   kable_paper(full_width = F)  %&gt;%
-* add_header_above(c(" ", "Stichprobe Baseline (N = 903)" = 3))
+* add_header_above(c(" ", "Stichprobe Baseline (N = 903)" = 4))
 ```
 ]
  
@@ -945,9 +1024,10 @@ total %&gt;%
  &lt;thead&gt;
 &lt;tr&gt;
 &lt;th style="empty-cells: hide;" colspan="1"&gt;&lt;/th&gt;
-&lt;th style="padding-bottom:0; padding-left:3px;padding-right:3px;text-align: center; " colspan="3"&gt;&lt;div style="border-bottom: 1px solid #00000020; padding-bottom: 5px; "&gt;Stichprobe Baseline (N = 903)&lt;/div&gt;&lt;/th&gt;
+&lt;th style="padding-bottom:0; padding-left:3px;padding-right:3px;text-align: center; " colspan="4"&gt;&lt;div style="border-bottom: 1px solid #00000020; padding-bottom: 5px; "&gt;Stichprobe Baseline (N = 903)&lt;/div&gt;&lt;/th&gt;
 &lt;/tr&gt;
   &lt;tr&gt;
+   &lt;th style="text-align:left;"&gt;   &lt;/th&gt;
    &lt;th style="text-align:right;"&gt; Treatment &lt;/th&gt;
    &lt;th style="text-align:right;"&gt; Kontrolle &lt;/th&gt;
    &lt;th style="text-align:right;"&gt; Differenz &lt;/th&gt;
@@ -956,54 +1036,63 @@ total %&gt;%
  &lt;/thead&gt;
 &lt;tbody&gt;
   &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Stiefoma im Haus &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 0.47 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 0.40 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 0.06 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 0.05 &lt;/td&gt;
   &lt;/tr&gt;
   &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Alter der Mutter &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 26.49 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 27.00 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; -0.51 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 0.14 &lt;/td&gt;
   &lt;/tr&gt;
   &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Depressiv (1 Jahr) &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 0.27 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 0.59 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; -0.32 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 0.00 &lt;/td&gt;
   &lt;/tr&gt;
   &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bildung des Vaters &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 6.95 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 7.09 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; -0.13 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 0.61 &lt;/td&gt;
   &lt;/tr&gt;
   &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Vater beschäftigt &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 0.90 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 0.91 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; -0.01 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 0.53 &lt;/td&gt;
   &lt;/tr&gt;
   &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Mutter beschäftigt &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 0.02 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 0.03 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; -0.01 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 0.26 &lt;/td&gt;
   &lt;/tr&gt;
   &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Erstes Kind &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 0.19 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 0.19 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 0.01 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 0.82 &lt;/td&gt;
   &lt;/tr&gt;
   &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Anzahl der Kinder &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 2.16 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 2.33 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; -0.17 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 0.15 &lt;/td&gt;
   &lt;/tr&gt;
   &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Oma im Haus &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 0.08 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 0.05 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 0.03 &lt;/td&gt;
@@ -1033,14 +1122,15 @@ thp %&gt;%
           Signifikanz = round(p.value,2)) %&gt;%
   select( Mean_Treatment, Mean_Kontrolle, Differenz, Signifikanz) -&gt; total
 
-rownames(total) &lt;- c("Alter der Mutter", "Depressiv (1 Jahr)", "Bildung des Vaters", "Vater beschäftigt", "Mutter beschäftigt", "Erstes Kind", "Anzahl der Kinder", "Oma im Haus", "Stiefoma im Haus")
+total$name &lt;- c("Stiefoma im Haus", "Alter der Mutter", "Depressiv (1 Jahr)", "Bildung des Vaters", "Vater beschäftigt", "Mutter beschäftigt", "Erstes Kind", "Anzahl der Kinder", "Oma im Haus")
 
 total %&gt;%
-  kbl(col.names = c("Treatment", "Kontrolle","Differenz","p-Wert"), digits = 2, format = "html",
+  select(name, everything()) %&gt;%
+  kbl(col.names = c(" ", "Treatment", "Kontrolle","Differenz","p-Wert"), digits = 2, format = "html",
       caption = "Balancing Tabelle für die Grundcharakteristika") %&gt;%
   kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive")) %&gt;%
   kable_paper(full_width = F)  %&gt;%
-  add_header_above(c(" ", "Stichprobe Baseline (N = 903)" = 3)) %&gt;%
+  add_header_above(c(" ", "Stichprobe Baseline (N = 903)" = 4)) %&gt;%
 * footnote(general = "Diese Tabelle testet, wie ausbalanciert die Beobachtungen in der Baseline Stichprobe sind. In den ersten beiden Spalten wird der Mittelwert für die Treatment bzw. Kontrollgruppe für die Baseline Stichprobe gezeigt. Spalte (3) zeigen die Differenz zwischen den Mittelwerten der Treatment und Kontrollgruppe für die jeweilige Stichprobe und die Spalte (4) zeigt die p-Werte und damit ob die einzelnen Mittelwerte statistisch signifikant unterschiedlich voneinander sind.")
 ```
 ]
@@ -1051,9 +1141,10 @@ total %&gt;%
  &lt;thead&gt;
 &lt;tr&gt;
 &lt;th style="empty-cells: hide;" colspan="1"&gt;&lt;/th&gt;
-&lt;th style="padding-bottom:0; padding-left:3px;padding-right:3px;text-align: center; " colspan="3"&gt;&lt;div style="border-bottom: 1px solid #00000020; padding-bottom: 5px; "&gt;Stichprobe Baseline (N = 903)&lt;/div&gt;&lt;/th&gt;
+&lt;th style="padding-bottom:0; padding-left:3px;padding-right:3px;text-align: center; " colspan="4"&gt;&lt;div style="border-bottom: 1px solid #00000020; padding-bottom: 5px; "&gt;Stichprobe Baseline (N = 903)&lt;/div&gt;&lt;/th&gt;
 &lt;/tr&gt;
   &lt;tr&gt;
+   &lt;th style="text-align:left;"&gt;   &lt;/th&gt;
    &lt;th style="text-align:right;"&gt; Treatment &lt;/th&gt;
    &lt;th style="text-align:right;"&gt; Kontrolle &lt;/th&gt;
    &lt;th style="text-align:right;"&gt; Differenz &lt;/th&gt;
@@ -1062,54 +1153,63 @@ total %&gt;%
  &lt;/thead&gt;
 &lt;tbody&gt;
   &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Stiefoma im Haus &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 0.47 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 0.40 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 0.06 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 0.05 &lt;/td&gt;
   &lt;/tr&gt;
   &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Alter der Mutter &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 26.49 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 27.00 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; -0.51 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 0.14 &lt;/td&gt;
   &lt;/tr&gt;
   &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Depressiv (1 Jahr) &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 0.27 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 0.59 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; -0.32 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 0.00 &lt;/td&gt;
   &lt;/tr&gt;
   &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bildung des Vaters &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 6.95 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 7.09 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; -0.13 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 0.61 &lt;/td&gt;
   &lt;/tr&gt;
   &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Vater beschäftigt &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 0.90 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 0.91 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; -0.01 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 0.53 &lt;/td&gt;
   &lt;/tr&gt;
   &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Mutter beschäftigt &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 0.02 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 0.03 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; -0.01 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 0.26 &lt;/td&gt;
   &lt;/tr&gt;
   &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Erstes Kind &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 0.19 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 0.19 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 0.01 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 0.82 &lt;/td&gt;
   &lt;/tr&gt;
   &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Anzahl der Kinder &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 2.16 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 2.33 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; -0.17 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 0.15 &lt;/td&gt;
   &lt;/tr&gt;
   &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Oma im Haus &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 0.08 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 0.05 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 0.03 &lt;/td&gt;
@@ -1144,14 +1244,15 @@ thp %&gt;%
           Signifikanz = round(p.value,2)) %&gt;%
   select( Mean_Treatment, Mean_Kontrolle, Differenz, Signifikanz) -&gt; total
 
-rownames(total) &lt;- c("Alter der Mutter", "Depressiv (1 Jahr)", "Bildung des Vaters", "Vater beschäftigt", "Mutter beschäftigt", "Erstes Kind", "Anzahl der Kinder", "Oma im Haus", "Stiefoma im Haus")
+total$name &lt;- c("Stiefoma im Haus", "Alter der Mutter", "Depressiv (1 Jahr)", "Bildung des Vaters", "Vater beschäftigt", "Mutter beschäftigt", "Erstes Kind", "Anzahl der Kinder", "Oma im Haus")
 
 total %&gt;%
-  kbl(col.names = c("Treatment", "Kontrolle","Differenz","p-Wert"), digits = 2, format = "html",
+  select(name, everything()) %&gt;%
+  kbl(col.names = c(" ", "Treatment", "Kontrolle","Differenz","p-Wert"), digits = 2, format = "html",
       caption = "Balancing Tabelle für die Grundcharakteristika") %&gt;%
   kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive")) %&gt;%
   kable_paper(full_width = F)  %&gt;%
-  add_header_above(c(" ", "Stichprobe Baseline (N = 903)" = 3)) %&gt;%
+  add_header_above(c(" ", "Stichprobe Baseline (N = 903)" = 4)) %&gt;%
   footnote(general = "Diese Tabelle testet, wie ausbalanciert die Beobachtungen in der Baseline Stichprobe sind. In den ersten beiden Spalten wird der Mittelwert für die Treatment bzw. Kontrollgruppe für die Baseline Stichprobe gezeigt. Spalte (3) zeigen die Differenz zwischen den Mittelwerten der Treatment und Kontrollgruppe für die jeweilige Stichprobe und die Spalte (4) zeigt die p-Werte und damit ob die einzelnen Mittelwerte statistisch signifikant unterschiedlich voneinander sind.")
 ```
 ]
@@ -1162,9 +1263,10 @@ total %&gt;%
  &lt;thead&gt;
 &lt;tr&gt;
 &lt;th style="empty-cells: hide;" colspan="1"&gt;&lt;/th&gt;
-&lt;th style="padding-bottom:0; padding-left:3px;padding-right:3px;text-align: center; " colspan="3"&gt;&lt;div style="border-bottom: 1px solid #00000020; padding-bottom: 5px; "&gt;Stichprobe Baseline (N = 903)&lt;/div&gt;&lt;/th&gt;
+&lt;th style="padding-bottom:0; padding-left:3px;padding-right:3px;text-align: center; " colspan="4"&gt;&lt;div style="border-bottom: 1px solid #00000020; padding-bottom: 5px; "&gt;Stichprobe Baseline (N = 903)&lt;/div&gt;&lt;/th&gt;
 &lt;/tr&gt;
   &lt;tr&gt;
+   &lt;th style="text-align:left;"&gt;   &lt;/th&gt;
    &lt;th style="text-align:right;"&gt; Treatment &lt;/th&gt;
    &lt;th style="text-align:right;"&gt; Kontrolle &lt;/th&gt;
    &lt;th style="text-align:right;"&gt; Differenz &lt;/th&gt;
@@ -1173,54 +1275,63 @@ total %&gt;%
  &lt;/thead&gt;
 &lt;tbody&gt;
   &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Stiefoma im Haus &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 0.47 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 0.40 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 0.06 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 0.05 &lt;/td&gt;
   &lt;/tr&gt;
   &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Alter der Mutter &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 26.49 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 27.00 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; -0.51 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 0.14 &lt;/td&gt;
   &lt;/tr&gt;
   &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Depressiv (1 Jahr) &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 0.27 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 0.59 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; -0.32 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 0.00 &lt;/td&gt;
   &lt;/tr&gt;
   &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bildung des Vaters &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 6.95 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 7.09 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; -0.13 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 0.61 &lt;/td&gt;
   &lt;/tr&gt;
   &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Vater beschäftigt &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 0.90 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 0.91 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; -0.01 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 0.53 &lt;/td&gt;
   &lt;/tr&gt;
   &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Mutter beschäftigt &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 0.02 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 0.03 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; -0.01 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 0.26 &lt;/td&gt;
   &lt;/tr&gt;
   &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Erstes Kind &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 0.19 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 0.19 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 0.01 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 0.82 &lt;/td&gt;
   &lt;/tr&gt;
   &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Anzahl der Kinder &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 2.16 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 2.33 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; -0.17 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 0.15 &lt;/td&gt;
   &lt;/tr&gt;
   &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Oma im Haus &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 0.08 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 0.05 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 0.03 &lt;/td&gt;
@@ -1276,9 +1387,10 @@ total %&gt;%
  &lt;thead&gt;
 &lt;tr&gt;
 &lt;th style="empty-cells: hide;" colspan="1"&gt;&lt;/th&gt;
-&lt;th style="padding-bottom:0; padding-left:3px;padding-right:3px;text-align: center; " colspan="3"&gt;&lt;div style="border-bottom: 1px solid #00000020; padding-bottom: 5px; "&gt;Stichprobe Baseline (N = 903)&lt;/div&gt;&lt;/th&gt;
+&lt;th style="padding-bottom:0; padding-left:3px;padding-right:3px;text-align: center; " colspan="4"&gt;&lt;div style="border-bottom: 1px solid #00000020; padding-bottom: 5px; "&gt;Stichprobe Baseline (N = 903)&lt;/div&gt;&lt;/th&gt;
 &lt;/tr&gt;
   &lt;tr&gt;
+   &lt;th style="text-align:left;"&gt;   &lt;/th&gt;
    &lt;th style="text-align:right;"&gt; Treatment &lt;/th&gt;
    &lt;th style="text-align:right;"&gt; Kontrolle &lt;/th&gt;
    &lt;th style="text-align:right;"&gt; Differenz &lt;/th&gt;
@@ -1287,54 +1399,63 @@ total %&gt;%
  &lt;/thead&gt;
 &lt;tbody&gt;
   &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Stiefoma im Haus &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 0.47 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 0.40 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 0.06 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 0.05 &lt;/td&gt;
   &lt;/tr&gt;
   &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Alter der Mutter &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 26.49 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 27.00 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; -0.51 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 0.14 &lt;/td&gt;
   &lt;/tr&gt;
   &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Depressiv (1 Jahr) &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 0.27 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 0.59 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; -0.32 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 0.00 &lt;/td&gt;
   &lt;/tr&gt;
   &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bildung des Vaters &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 6.95 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 7.09 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; -0.13 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 0.61 &lt;/td&gt;
   &lt;/tr&gt;
   &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Vater beschäftigt &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 0.90 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 0.91 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; -0.01 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 0.53 &lt;/td&gt;
   &lt;/tr&gt;
   &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Mutter beschäftigt &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 0.02 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 0.03 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; -0.01 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 0.26 &lt;/td&gt;
   &lt;/tr&gt;
   &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Erstes Kind &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 0.19 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 0.19 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 0.01 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 0.82 &lt;/td&gt;
   &lt;/tr&gt;
   &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Anzahl der Kinder &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 2.16 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 2.33 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; -0.17 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 0.15 &lt;/td&gt;
   &lt;/tr&gt;
   &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Oma im Haus &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 0.08 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 0.05 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 0.03 &lt;/td&gt;

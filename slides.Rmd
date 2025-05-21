@@ -261,3 +261,10 @@ knitr::include_url("slides/instruments.html")
 - Eine hervorragende Einführung in DAGs finden Sie im Kurs [Program Evaluation](https://evalf20.classes.andrewheiss.com/content/11-content/) von Andrew Heiss
 - Zur Instrumentalvariablenschätzung in R verwenden wir das _AER_: Kleiber, Christian, and Achim Zeileis. 2022. AER: Applied Econometrics with R (version 1.2-10). https://CRAN.R-project.org/package=AER.
 - Zur schönen Darstellung der Regressionsergebnisse verwenden wir das Paket _stargazer_: Hlavac, Marek (2022). stargazer: Well-Formatted Regression and Summary Statistics Tables (version 5.2.3). https://CRAN.R-project.org/package=stargazer.
+
+### 12: Einführung in das maschinelle Lernen
+
+```{r}
+knitr::include_url("slides/machine_learning.html")
+```
+

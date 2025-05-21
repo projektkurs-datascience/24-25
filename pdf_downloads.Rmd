@@ -39,3 +39,4 @@ Hier finden Sie Folien als PDFs zum Download:
 - [Kausalität in den Wirtschaftswissenschaften](slides/DAG_slides.pdf)
 - [Randomisiertes Experiment](slides/Experiment_slides.pdf)
 - [Instrumentalvariablen](slides/instruments.pdf)
+- [Maschinelles Lernen](slides/machine_learning.pdf)
