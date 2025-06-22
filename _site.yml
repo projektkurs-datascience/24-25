@@ -55,6 +55,8 @@ navbar:
         href: ./tutorials/Team-Guidelines.html
       - text: "Quellen und KI Guidelines"
         href: ./tutorials/Quellenverweise-und-AI-Policy.html
+      - text: "Ellmer für LLMs"
+        href: ./tutorials/zero-prompting.html
       - text: "Cheatsheets"
         href: https://rstudio.com/resources/cheatsheets/
   - text: Moodle WiSe

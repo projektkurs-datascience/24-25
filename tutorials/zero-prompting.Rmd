@@ -1,0 +1,457 @@
+---
+title: "LLM-basierte Textanalyse mit ellmer und Google Gemini"
+subtitle: "Eine Einführung in LLM-basierte Textanalyse für Finanzberichte"
+output: 
+  html_document:
+    theme: cosmo
+    code_download: true
+    toc: true
+    toc_float: true
+---
+
+In der Finanzanalyse begegnen uns täglich große Mengen an Textdaten - von Geschäftsberichten über Analystenbewertungen bis hin zu Pressemitteilungen. Die traditionelle Textanalyse war bisher entweder sehr zeitaufwendig (manuelles Lesen) oder ungenau (einfache Wörterbuch-basierte Methoden). 
+
+Large Language Models (LLMs) wie Google Gemini bieten eine neue Möglichkeit: Sie können Texte kontextuell verstehen und komplexe Bewertungen vornehmen, ohne dass wir sie vorher auf unsere spezifische Aufgabe trainieren müssen. Diese Fähigkeit nennt sich **Zero-Shot Learning**.
+
+In diesem Tutorial lernen Sie, wie Sie mit dem `ellmer` Paket und Google Gemini systematische Sentiment-Analysen von SEC-Filings durchführen. Als Beispiel analysieren wir Apple's Management Discussion & Analysis (Item 7) aus dem 10-K Filing.
+
+## Was sind Large Language Models und Zero-Shot Prompting?
+
+### Large Language Models verstehen
+
+LLMs sind Modelle, die auf riesigen Textmengen trainiert wurden und dadurch ein tiefes Verständnis von Sprache entwickelt haben. Sie funktionieren grundsätzlich wie eine sehr intelligente Textvervollständigung - sie versuchen, den wahrscheinlichsten nächsten Text zu generieren.
+
+Der entscheidende Unterschied zu früheren NLP-Methoden:
+
+- **Traditionelle Methoden**: Benötigen Training auf spezifische Aufgaben
+- **Generative LLMs**: Können neue Aufgaben durch natürliche Sprache verstehen
+
+### Zero-Shot Prompting
+
+**Zero-Shot** bedeutet, dass das Modell eine Aufgabe löst, ohne vorher Beispiele für diese Aufgabe gesehen zu haben. Stattdessen geben wir ihm klare Anweisungen in natürlicher Sprache.
+
+Beispiel:
+
+```
+Prompt: "Bewerte die Stimmung des folgenden Texts auf einer Skala von -2 bis +2: 
+'Unsere Quartalsergebnisse haben die Erwartungen deutlich übertroffen.'"
+
+Antwort: "+2 - Der Text drückt klaren Erfolg aus ('übertroffen', 'deutlich')"
+```
+
+Das Modell "weiß" bereits, was Sentiment-Analyse ist, ohne dass wir es extra trainieren müssen.
+
+## Installation und Setup
+
+### Benötigte Pakete
+
+```{r}
+# Pakete laden
+library(ellmer)
+library(tidyverse)
+library(rvest)
+library(stringr)
+library(readr)
+library(httr)
+library(glue)
+library(jsonlite)
+```
+
+### Google Gemini API einrichten
+
+Um Google Gemini zu nutzen, benötigen Sie einen API-Schlüssel:
+
+1. Besuchen Sie [Google AI Studio](https://aistudio.google.com/app/apikey)
+2. Erstellen Sie einen kostenlosen API-Schlüssel
+3. Speichern Sie ihn sicher in Ihrer `.Renviron` Datei:
+
+```{r, eval = F}
+# .Renviron bearbeiten
+usethis::edit_r_environ()
+
+# Diese Zeile hinzufügen:
+GEMINI_API_KEY="Ihr_API_Schlüssel_hier"
+
+# R neustarten
+.rs.restartR()
+```
+
+**Wichtig**: Speichern Sie API-Schlüssel niemals direkt im Code! Die `.Renviron` Datei ist der sichere Weg.
+
+## Grundlagen der Textverarbeitung
+
+### Apple 10-K Filing herunterladen und vorbereiten
+
+Die 10K Filing sind die Jahresberichte der amerikanischen Unternehmen. Diese Unternehmen müssen ab einer bestimmten Größe alle solche Berichte einreichen. Wir können diesen 10K herunterladen und als Beispiel analysieren, möchten der SEC aber im ersten Schritt deutlich machen, wofür wir diese Datei nutzen, daher die Definition des `User-Agent`.
+
+Sie können grundsätzlich auf alle diese Berichte kostenlos zugreifen, was eine sehr umfangreiche Datenbank darstellt. Für einen Zugriff auf mehrere Berichte empfiehlt es sich allerdings spezielle Pakete zu nutzen die eine direkte Schnittstelle zur EDGAR Datenbank bieten (die Datenbank auf der diese 10Ks zur Verfügung gestellt werden).
+
+```{r}
+# Erweiterte Download-Funktion für moderne und ältere SEC-Filings (wir haben hier ein SEC von Apple von 2013, die moderneren Filings sind etwas komplexer)
+safe_download_sec <- function(url, max_retries = 3) {
+  for(i in 1:max_retries) {
+    tryCatch({
+      # User-Agent Header ist wichtig für SEC-Akzeptanz
+      response <- GET(url, 
+                     add_headers(`User-Agent` = "R/Educational-Research Mozilla/5.0"),
+                     timeout(30))
+      
+      if(status_code(response) == 200) {
+        content_text <- content(response, as = "text", encoding = "UTF-8")
+        
+        # Prüfen ob es sich um einen iXBRL Viewer handelt
+        if(str_detect(content_text, "XBRL Viewer|ixviewer")) {
+          message("Moderne iXBRL-Datei erkannt - versuche direkte HTML-URL...")
+          
+          # Direkte HTML-URL aus iXBRL-URL konstruieren
+          direct_url <- convert_ixbrl_to_direct(url)
+          if(!is.null(direct_url)) {
+            response <- GET(direct_url, 
+                           add_headers(`User-Agent` = "R/Educational-Research Mozilla/5.0"),
+                           timeout(30))
+            if(status_code(response) == 200) {
+              content_text <- content(response, as = "text", encoding = "UTF-8")
+              return(content_text)
+            }
+          }
+        } else {
+          return(content_text)
+        }
+      }
+    }, error = function(e) {
+      message("Versuch ", i, " fehlgeschlagen: ", e$message)
+      if(i < max_retries) Sys.sleep(2)
+    })
+  }
+  return(NULL)
+}
+
+# Apple 10K von 2013:
+apple_url_new <- "https://www.sec.gov/Archives/edgar/data/320193/000119312513416534/d590790d10k.htm"
+
+# Versuche zuerst die moderne URL
+apple_html_content <- safe_download_sec(apple_url_new)
+
+if(!is.null(apple_html_content)) {
+  # HTML zu Text konvertieren
+  apple_html <- read_html(apple_html_content)
+  apple_2013_text <- apple_html %>%
+    html_text() %>%
+    str_squish()
+  
+  message("SEC Filing erfolgreich geladen: ", nchar(apple_2013_text), " Zeichen")
+} else {
+  cat("Download fehlgeschlagen. Verwende Fallback-Option...\n")
+  apple_text <- NULL
+}
+
+```
+
+### Item 7 identifizieren und extrahieren
+
+Da es Zeit- und Kostenintensiv ist große Datenmengen mit LLMs zu analysieren sollten Sie ihre Analyse nur auf einen kleinen (aber potentiell wichtigen) Teil der 10Ks beschränken - Item 7. In Item 7 ist die "Management’s Discussion and Analysis of Financial Condition and Results of Operations (MD&A)" und enthält die Einschätzung der Unternehmensleitung zur finanziellen Lage, Leistung und Zukunftsaussichten des Unternehmens. 
+
+Mit dem Paket `stringr` und einigen sogenannten regulären Ausdrücken können Sie diese die Informationen aus dem Gesamtbericht, welche zu Item 7 gehören extrahieren. Das [`stringr`-Cheatsheet](https://rstudio.github.io/cheatsheets/strings.pdf) gibt einen sehr guten Einblick in das Paket und was reguläre Ausrücke sind und wie Sie diese nutzen können:
+
+```{r}
+# Text zum Item 7 aus 10-K extrahieren
+extract_item7 <- function(text_content) {
+  
+  # Find Item 7 start
+  start_patterns <- c(
+    "This Item 7.*Management.*Discussion.*Analysis",
+    "Item 7.*Management.*Discussion.*Analysis.*Financial.*Condition",
+    "Overview and Highlights.*Company designs.*manufactures"
+  )
+  
+  item7_start <- NULL
+  for (pattern in start_patterns) {
+    match_pos <- str_locate(text_content, regex(pattern, ignore_case = TRUE))
+    if (!is.na(match_pos[1])) {
+      item7_start <- match_pos[1]
+      break
+    }
+  }
+  
+  if (is.null(item7_start)) {
+    stop("Item 7 start not found")
+  }
+  
+  # Find Item 7 end
+  end_patterns <- c(
+    "Item 7A.*Quantitative.*Qualitative.*Disclosures",
+    "Item 8.*Financial Statements"
+  )
+  
+  item7_end <- nchar(text_content)
+  for (pattern in end_patterns) {
+    match_pos <- str_locate(text_content, regex(pattern, ignore_case = TRUE))
+    if (!is.na(match_pos[1]) && match_pos[1] > item7_start) {
+      item7_end <- match_pos[1] - 1
+      break
+    }
+  }
+  
+  # Extract and return Item 7 text
+  str_sub(text_content, item7_start, item7_end)
+}
+
+item7_content <- extract_item7(apple_2013_text)
+```
+
+## Analysen mit `ellmer` und Google Gemini
+
+### System-Prompt definieren
+
+Der System-Prompt definiert die "Persönlichkeit" und das Verhalten unseres LLM-Assistenten. Für Sentiment-Analyse von Finanzberichten sollte dieser spezifisch und präzise sein. Dieser System-Prompt bildet die Basis für die späteren Analysen und wird dann über das "chat" Objekt an die späteren Chats übergeben.
+
+```{r}
+# System-Prompt definieren (nach wissenschaftlichen Standards)
+system_prompt <- "Du bist ein erfahrener Finanzanalyst, der auf die Bewertung von Unternehmenskommunikation spezialisiert ist.
+
+Deine Aufgaben:
+- Objektive Sentiment-Analyse von Finanzberichten und SEC-Filings
+- Erkennung von Management-Optimismus oder -Vorsicht
+- Identifikation von Risikosignalen und Wachstumsindikatoren
+
+Deine Arbeitsweise:
+- Verwende eine Skala von -2 (sehr negativ) bis +2 (sehr positiv)
+- Begründe alle Bewertungen mit konkreten Textpassagen
+- Sei präzise und strukturiert in deinen Antworten
+- Wenn du unsicher bist, sage das explizit"
+
+# Chat-Objekt erstellen
+chat <- chat_google_gemini(
+  model = "gemini-2.5-flash",  # Neuestes Modell
+  system_prompt = system_prompt,
+  params = params(temperature = 0)
+)
+
+# Verbindung testen
+test_response <- chat$chat("Bist du bereit für die Analyse von Apple's Geschäftsbericht?")
+```
+
+Da Sie nun ihrem LLM gesagt haben auf was es sich grundsätzlich einstellen muss (mit dem System-Prompt) können Sie im nächsten Abschnitt damit fortfahren die Seniment Analyse durchzuführen und dafür einen entsprechenden Prompt schreiben.
+
+Da Sie in diesem Tutorial Textoutput mit numerischem Output vermischen sollen ist es vorteilhaft das JSON Format als Outputformat zu nutzen. In R kann dieses Format beispielsweise mit dem `jsonlite` Paket verarbeitet werden.
+
+## Prompt-Engineering
+
+Basierend auf de Kok (2025) sollten Sie folgende Prinzipien bei ihrem Prompt beachten:
+
+Der Prompt sollte:
+
+1. **Spezifisch und eindeutig** sein
+2. **Kontextualisierung** bereitstellen
+3. **Ausgabeformat** definieren
+4. **Temperatur** bestimmen (auf 0 setzen, wenn ihre Ergebnisse reproduzierbar sein sollen, dann sind diese allerdings weniger kreativ)
+5. **Chain-of-Thought** verwenden
+
+### Beispiel: Reproduzierbarer Prompt für Sentiment-Analyse
+
+```{r}
+sentiment_prompt <- function(text_to_analyze) {
+  prompt <- glue::glue("
+**Aufgabe:** Analysiere die Stimmung des folgenden Finanztext-Abschnitts.
+
+**Kontext:** Dies ist ein Auszug aus Apple's Management Discussion & Analysis (Item 7) eines 10-K Filings.
+
+**Text zu analysieren:**
+'{text_to_analyze}'  
+
+**Instruktionen:**
+1. Bewerte die Stimmung auf einer Skala von -2 (sehr negativ) bis +2 (sehr positiv)
+2. Erkläre deine Bewertung mit spezifischen Textpassagen
+3. Identifiziere Schlüsselwörter, die deine Bewertung stützen
+
+**Ausgabeformat (JSON):**
+{{
+  'sentiment_score': <Zahl zwischen -2 und 2>,
+  'explanation': '<Begründung>',
+  'key_phrases': ['phrase1', 'phrase2', 'phrase3'],
+  'confidence': '<hoch/mittel/niedrig>'
+}}
+
+**Antwort:**")
+  
+  return(prompt)
+}
+
+# Prompt anwenden
+if(!is.null(item7_content)) {
+  sentiment_prompt <- sentiment_prompt(item7_content)
+  sentiment_result <- chat$chat(sentiment_prompt)
+  cat("Sentiment-Analyse:\n", sentiment_result)
+}
+```
+
+Dieser Prompt fordert das LLM dazu auf sehr verbose zu sein, d.h. sich sehr viel zu erklären. Wenn Sie viele Texte zu analysieren haben würden Sie die Output Tokens minimieren wollen. In diesem Fall würden Sie potentiell die Erklärung, warum sich das LLM für seine Einschätzung entschieden hat nicht verlangen.
+
+Nun sollten Sie das ausgegebene JSON noch in R verarbeiten und als Tibble abspeichern:
+
+```{r}
+parse_sentiment_json <- function(json_string) {
+  
+  # Entferne Markdown-Code-Block-Wrapper falls vorhanden
+  clean_json <- json_string %>%
+    str_remove("^```json\\s*") %>%    # Entferne ```json am Anfang
+    str_remove("```\\s*$") %>%        # Entferne ``` am Ende
+    str_remove("^```\\s*") %>%        # Entferne ``` am Anfang (falls kein json)
+    str_trim()                        # Entferne Leerzeichen
+  
+  # JSON parsen
+  result <- fromJSON(clean_json)
+  
+  # Sentiment Score interpretieren
+  sentiment_label <- case_when(
+    result$sentiment_score > 0 ~ "Positiv",
+    result$sentiment_score == 0 ~ "Neutral", 
+    result$sentiment_score < 0 ~ "Negativ",
+    TRUE ~ "Unbekannt"
+  )
+  
+  # Key Phrases als Tibble strukturieren
+  key_phrases_df <- tibble(
+    phrase_id = seq_along(result$key_phrases),
+    phrase = result$key_phrases,
+    # Kategorisiere Phrases
+    category = case_when(
+      str_detect(phrase, regex("sales|revenue|growth|increase", ignore_case = TRUE)) ~ "Positive Performance",
+      str_detect(phrase, regex("margin|decline|pressure|unfavorable", ignore_case = TRUE)) ~ "Challenges",
+      str_detect(phrase, regex("cash|dividend|repurchase|capital", ignore_case = TRUE)) ~ "Capital Management", 
+      str_detect(phrase, regex("iPhone|iPad|Mac|iPod", ignore_case = TRUE)) ~ "Products",
+      str_detect(phrase, regex("store|retail|expansion", ignore_case = TRUE)) ~ "Retail",
+      TRUE ~ "Other"
+    ),
+    # Extrahiere numerische Werte
+    contains_number = str_detect(phrase, "\\d"),
+    contains_percentage = str_detect(phrase, "%"),
+    contains_dollar = str_detect(phrase, "\\$")
+  )
+  
+  list(
+    summary = tibble(
+      sentiment_score = result$sentiment_score,
+      sentiment_label = sentiment_label,
+      confidence = result$confidence,
+      explanation_length = nchar(result$explanation),
+      key_phrases_count = length(result$key_phrases)
+    ),
+    explanation = result$explanation,
+    key_phrases = key_phrases_df
+  )
+}
+
+# Was wurde hauptsächlich gesagt pro Kategorie
+analyze_key_phrases <- function(parsed_result) {
+  
+  parsed_result$key_phrases %>%
+    count(category, sort = TRUE) %>%
+    mutate(
+      percentage = round(n / sum(n) * 100, 1)
+    )
+}
+
+# Numerische Werte extrahieren
+extract_numerical_insights <- function(parsed_result) {
+  
+  phrases_with_numbers <- parsed_result$key_phrases %>%
+    filter(contains_number) %>%
+    mutate(
+      # Extrahiere Prozentsätze
+      percentage = str_extract(phrase, "\\d+(?:\\.\\d+)?%"),
+      # Extrahiere Dollarbeträge 
+      dollar_amount = str_extract(phrase, "\\$\\d+(?:\\.\\d+)?\\s*(?:billion|million)?"),
+      # Extrahiere andere Zahlen
+      other_numbers = str_extract(phrase, "\\d+(?:\\.\\d+)?")
+    ) %>%
+    select(phrase_id, phrase, category, percentage, dollar_amount, other_numbers)
+  
+  return(phrases_with_numbers)
+}
+
+parsed_result <- parse_sentiment_json(sentiment_result)
+
+# Zusammenfassung anzeigen
+print(parsed_result$summary)
+
+# Für weitere Analysen:
+# sentiment_score <- parsed_result$summary$sentiment_score
+# explanation <- parsed_result$explanation  
+# phrases_df <- parsed_result$key_phrases
+
+# Falls Sie mehrere JSON Ergebnisse haben:
+process_multiple_results <- function(json_list) {
+  
+  map_dfr(seq_along(json_list), ~ {
+    result <- parse_sentiment_json(json_list[[.x]])
+    result$summary %>%
+      mutate(analysis_id = .x)
+  })
+}
+```
+
+Super. Damit wissen Sie nun, wie Sie Textdateien mittels ellmer und Google Gemini auf deren Sentiment hin analysieren können und wie Sie den Output danach in R in einem Tibble sichern.
+
+Zum Abschluss noch einige Best Practices zur Analyse mit LLMs:
+
+1. **Evaluierung:** Immer manuell ein Sample prüfen
+2. **Konstruktvalidität:** Ergebnisse mit anderen Methoden vergleichen
+3. **Transparenz:** Prompts und Modell-Parameter dokumentieren
+4. **Kosten:** Token-Verwendung überwachen
+
+```{r}
+# Token- und Kosten-Tracking
+track_usage <- function(chat_object, text_input) {
+  # Geschätzte Token (grob: ~4 Zeichen pro Token)
+  estimated_tokens <- nchar(text_input) / 4
+
+  cat("Geschätzte Token:", round(estimated_tokens), "\n")
+}
+
+# Beispiel
+if(!is.null(item7_content)) {
+  track_usage(chat, item7_content)
+}
+```
+
+### Limitationen beachten
+
+Leider neigen LLMs dazu zu halluzinieren (zumindest stand Juni 2025). Sie können am Ende noch prüfen, ob die Einschätzung der LLM mit hoher oder niedriger Sicherheit getätigt wurde, aber auch hier ist vorsicht angesagt, da die LLMs sehr selbstsicher Dinge erfinden.
+
+
+```{r}
+# Qualitäts-Check Funktion
+check_llm_response_quality <- function(response) {
+  quality_indicators <- list(
+    length_reasonable = nchar(response) > 10 && nchar(response) < 10000,
+    no_hallucination_markers = !str_detect(response, "(?i)(ich weiß nicht|unsicher|kann nicht bestätigen)"),
+    structured_format = str_detect(response, "\\{|\\[|\\:|\\-"),
+    no_obvious_errors = !str_detect(response, "(?i)(error|fehler|exception)")
+  )
+  
+  overall_quality <- mean(unlist(quality_indicators))
+  
+  return(list(
+    quality_score = overall_quality,
+    indicators = quality_indicators,
+    recommendation = ifelse(overall_quality > 0.7, "Akzeptabel", "Überprüfung erforderlich")
+  ))
+}
+
+# Beispiel für Qualitätsprüfung
+if(exists("sentiment_result")) {
+  quality_check <- check_llm_response_quality(sentiment_result)
+  cat("Qualitäts-Score:", quality_check$quality_score, "\n")
+  cat("Empfehlung:", quality_check$recommendation, "\n")
+}
+```
+
+In diesem Sinne frohes Arbeiten mit `ellmer`!
+
+## Weiterführende Ressourcen
+
+- **ellmer Dokumentation:** https://ellmer.tidyverse.org/
+- **Google Gemini API:** https://ai.google.dev/
+- **Ties de Kok (2025) "ChatGPT for Textual Analysis? How to Use Generative LLMs in Accounting Research". Management Science. https://doi.org/10.1287/mnsc.2023.03253:** Für weitere Prompt-Engineering Techniken 
+- **SEC EDGAR Database:** https://www.sec.gov/edgar/searchedgar/companysearch.html
